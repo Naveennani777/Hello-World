@@ -229,3 +229,55 @@ One is eldest Manojnani
 I am youngest
 
 **************
+print("\n**************\n")
+
+print ("\nDefine a class\nInitialize variables in class using Constructor\nGet values of one function into another function within sameclass\nCreate an object for the class defined\nCall the functions in class using object\nPrint output\n")
+
+class Fruits():
+  def __init__(self):
+    self.fruit1 = "apple"
+    self.fruit2 = "banana"
+    self.a = 10
+  def Vegetable(self):
+    self.veg1 = "bottleguard"
+    self.veg2 = "bitterguard"
+    print (self.veg1)
+    print (self.veg2)
+  def Car(self,*args):
+    for arg in args:
+      print ("Indian cars are" , arg)
+  def Health(self,value):
+    if (value == "bitterguard"):
+      self.a += 10
+      print("bitterguard makes health strong" , self.a)
+    elif (value == "liquor"):
+      self.a -= 10
+      print("liquor makes health weak" , self.a)
+      
+x=Fruits()
+print(x.fruit1)
+print(x.fruit2)
+print(x.a)
+x.Health("bitterguard")
+x.Health("liquor")
+x.Vegetable()
+x.Car("maruthi","TATA","Mahendra")      
+
+print("output of above written classes and functions")
+Define a class
+Initialize variables in class using Constructor
+Get values of one function into another function within sameclass
+Create an object for the class defined
+Call the functions in class using object
+Print output
+
+apple
+banana
+10
+bitterguard makes health strong 20
+liquor makes health weak 10
+bottleguard
+bitterguard
+Indian cars are maruthi
+Indian cars are TATA
+Indian cars are Mahendra

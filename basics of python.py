@@ -127,3 +127,105 @@ elif name == "april":
   print (" Entered name is " , name)
 else:
   print ("Entered name is not in list" , name)
+
+  
+print ("Defining classes")
+a = 2
+print(id(a))
+print(type(a))
+print(a)
+b = 3
+print(id(b))
+print(type(b))
+print(b)
+c = 3.4
+print(type(c))
+d =[]
+e={}
+f=()
+print(type(d))
+print(type(e))
+print(type(f))
+g =2 
+print(id(g))
+x=y=[1,2]
+z={1,2}
+print(id(x))
+print(id(y))
+print(type(z))
+abc=""
+print(type(abc))
+
+print("output of programs")
+140302468389984
+<class 'int'>
+2
+140302468390016
+<class 'int'>
+3
+<class 'float'>
+<class 'list'>
+<class 'dict'>
+<class 'tuple'>
+140302468389984
+140302410408008
+140302410408008
+<class 'set'>
+<class 'str'>
+
+**************
+print("\n**************\n")
+print ("Defining a class")
+
+class Naveen:
+  def Nani(self):
+    print ("Welcome to classes")
+    print ("Welcome to python")
+a=Naveen()
+a.Nani()
+
+print("\n**************\n")
+class Mahesh:
+  def __init__(self):
+   self.name="I am eldest"
+   self.var="Family club"
+  def Nani1(self,name2):
+    print ("I am eldest " , name2)
+    self.Nani2(22,23,24,5,23,234,243)
+  def Nani2(self,*args):
+    for arg in args:
+      print ("One is eldest" , arg)
+    print("I am youngest")
+    
+    
+b=Mahesh()
+print (b.name)
+print(b.var)
+b.Nani1("Sachin")
+b.Nani2("Naveennani","Manojnani")
+
+print("\n**************\n")
+
+print ("output of above defined classes")
+Defining a class
+Welcome to classes
+Welcome to python
+
+**************
+
+I am eldest
+Family club
+I am eldest  Sachin
+One is eldest 22
+One is eldest 23
+One is eldest 24
+One is eldest 5
+One is eldest 23
+One is eldest 234
+One is eldest 243
+I am youngest
+One is eldest Naveennani
+One is eldest Manojnani
+I am youngest
+
+**************

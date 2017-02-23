@@ -1,0 +1,13 @@
+1. Sign In to Gerrit Code Review, Generate and Add the SSH key ( in https://git.opendaylight.org)
+2. git clone ssh://<user_name>@git.opendaylight.org:29418/integration/test
+3. got to "test" directory
+4. git config --global user.name "<user_name>"
+5 .git config --global user.email "<user_mail>" 
+6. scp -p -P 29418 <user_name>@git.opendaylight.org:hooks/commit-msg .git/hooks/
+7. chmod 755 .git/hooks/commit-msg
+8. copy new files/changes - to respective directories and execute “git status”
+9. git add     ( for adding new files)
+10. git commit -s -a --amend    (for amend commit)
+11. git commit -a -s   (for new commit)                
+12. execute “git status”
+13. git push  ssh://<user_name>@git.opendaylight.org:29418/integration/test.git HEAD:refs/for/master

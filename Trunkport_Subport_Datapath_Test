@@ -1,0 +1,686 @@
+trunk port and subport creation:
+=================================
+create network , subnet , port , 
+CReate two ports with fixed IPs and in same network N1. 
+Create sub ports in another network N2
+Spawn VMs on both trunk ports.
+
+
+root@ubuntu-15:~# curl -u admin:admin -X GET -H "Content Type:application/json" http://10.2.1.4:8080/controller/nb/v2/neutron/networks
+{
+   "networks" : [ {
+      "id" : "140dbcfe-3d53-4cc4-aadd-edd571a64383",
+      "tenant_id" : "1f988557c0e74d2a9c4f7ff8ed27a929",
+      "name" : "net10",
+      "admin_state_up" : true,
+      "shared" : false,
+      "router:external" : false,
+      "provider:network_type" : "vxlan",
+      "provider:segmentation_id" : "1050",
+      "status" : "ACTIVE",
+      "segments" : [ ]
+   } ]
+}root@ubuntu-15:~#
+root@ubuntu-15:~#
+root@ubuntu-15:~#
+root@ubuntu-15:~# curl -u admin:admin -X GET -H "Content Type:application/json" http://10.2.1.4:8080/controller/nb/v2/neutron/networks
+{
+   "networks" : [ {
+      "id" : "140dbcfe-3d53-4cc4-aadd-edd571a64383",
+      "tenant_id" : "1f988557c0e74d2a9c4f7ff8ed27a929",
+      "name" : "net10",
+      "admin_state_up" : true,
+      "shared" : false,
+      "router:external" : false,
+      "provider:network_type" : "vxlan",
+      "provider:segmentation_id" : "1050",
+      "status" : "ACTIVE",
+      "segments" : [ ]
+   } ]
+}root@ubuntu-15:~#
+root@ubuntu-15:~#
+root@ubuntu-15:~# curl -u admin:admin -X GET -H "Content Type:application/json" http://10.2.1.4:8080/controller/nb/v2/neutron/subnets
+{
+   "subnets" : [ {
+      "id" : "b4baa77e-77c8-486c-aa22-da31c632ad90",
+      "tenant_id" : "1f988557c0e74d2a9c4f7ff8ed27a929",
+      "network_id" : "140dbcfe-3d53-4cc4-aadd-edd571a64383",
+      "name" : "subnet10",
+      "ip_version" : 4,
+      "cidr" : "10.10.10.0/24",
+      "gateway_ip" : "10.10.10.1",
+      "dns_nameservers" : [ ],
+      "allocation_pools" : [ {
+         "start" : "10.10.10.2",
+         "end" : "10.10.10.254"
+      } ],
+      "host_routes" : [ ],
+      "enable_dhcp" : true,
+      "ipv6_address_mode" : null,
+      "ipv6_ra_mode" : null
+   } ]
+}
+
+root@ubuntu-15:~# curl -u admin:admin -X GET -H "Content Type:application/json" http://10.2.1.4:8080/controller/nb/v2/neutron/ports 
+{
+   "ports" : [ {
+      "id" : "2e9cf206-3c6e-439d-96c8-b4f58cfdd5b7",
+      "tenant_id" : "1f988557c0e74d2a9c4f7ff8ed27a929",
+      "network_id" : "140dbcfe-3d53-4cc4-aadd-edd571a64383",
+      "name" : "port10",
+      "admin_state_up" : true,
+      "status" : "ACTIVE",
+      "mac_address" : "fa:16:3e:b8:38:d1",
+      "fixed_ips" : [ {
+         "ip_address" : "10.10.10.30",
+         "subnet_id" : "b4baa77e-77c8-486c-aa22-da31c632ad90"
+      } ],
+      "device_id" : "",
+      "device_owner" : "",
+      "security_groups" : [ {
+         "id" : "c5223b40-834b-404a-940e-75e379c23495"
+      } ],
+      "allowed_address_pairs" : [ ],
+      "binding:host_id" : "",
+      "binding:vnic_type" : "normal",
+      "binding:vif_type" : "unbound",
+      "Map" : {
+      },
+      "extra_dhcp_opts" : [ ],
+      "port_security_enabled" : true
+   }, {
+      "id" : "6617e128-7b3a-4919-b77c-24b5d2c9906d",
+      "tenant_id" : "1f988557c0e74d2a9c4f7ff8ed27a929",
+      "network_id" : "140dbcfe-3d53-4cc4-aadd-edd571a64383",
+      "name" : "port11",
+      "admin_state_up" : true,
+      "status" : "ACTIVE",
+      "mac_address" : "fa:16:3e:73:5e:2f",
+      "fixed_ips" : [ {
+         "ip_address" : "10.10.10.31",
+         "subnet_id" : "b4baa77e-77c8-486c-aa22-da31c632ad90"
+      } ],
+      "device_id" : "",
+      "device_owner" : "",
+      "security_groups" : [ {
+         "id" : "c5223b40-834b-404a-940e-75e379c23495"
+      } ],
+      "allowed_address_pairs" : [ ],
+      "binding:host_id" : "",
+      "binding:vnic_type" : "normal",
+      "binding:vif_type" : "unbound",
+      "Map" : {
+      },
+      "extra_dhcp_opts" : [ ],
+      "port_security_enabled" : true
+   } ]
+}
+
+root@ubuntu-15:~#
+
+sub port parameters:
+=====================
+mac shud be same as trunk port 
+
+parent trunk id : id of trunk port 
+
+network id : 2nd network
+subnet id : 2nd network
+port security : true 
+
+
+commands:
+==========
+Trunk port creation:
+====================
+neutron net-create net10
+neutron subnet-create net10 10.10.10.0/24 --enable-dhcp --name subnet10
+neutron port-create net10 --name port10 --fixed-ip ip_address=10.10.10.30
+neutron port-create net10 --name port11 --fixed-ip ip_address=10.10.10.31
+
+
+after port creation:
+====================
+stack@ubuntu-42:/var/lib/libvirt/images$ neutron port-list
++--------------------------------------+--------+-------------------+--------------------------------------------------+
+| id                                   | name   | mac_address       | fixed_ips                                        |
++--------------------------------------+--------+-------------------+--------------------------------------------------+
+| 2e9cf206-3c6e-439d-96c8-b4f58cfdd5b7 | port10 | fa:16:3e:b8:38:d1 | {"subnet_id": "b4baa77e-77c8-486c-               |
+|                                      |        |                   | aa22-da31c632ad90", "ip_address": "10.10.10.30"} |
+| 6617e128-7b3a-4919-b77c-24b5d2c9906d | port11 | fa:16:3e:73:5e:2f | {"subnet_id": "b4baa77e-77c8-486c-               |
+|                                      |        |                   | aa22-da31c632ad90", "ip_address": "10.10.10.31"} |
++--------------------------------------+--------+-------------------+--------------------------------------------------+
+
+after network creation:
+=======================
+
+ curl -u admin:admin -X GET -H "Content Type:application/json" http://10.2.1.4:8080/controller/nb/v2/neutron/ports
+{
+   "ports" : [ {
+      "id" : "6617e128-7b3a-4919-b77c-24b5d2c9906d",
+      "tenant_id" : "1f988557c0e74d2a9c4f7ff8ed27a929",
+      "network_id" : "140dbcfe-3d53-4cc4-aadd-edd571a64383",
+      "name" : "port11",
+      "admin_state_up" : true,
+      "status" : "ACTIVE",
+      "mac_address" : "fa:16:3e:73:5e:2f",
+      "fixed_ips" : [ {
+         "ip_address" : "10.10.10.31",
+         "subnet_id" : "b4baa77e-77c8-486c-aa22-da31c632ad90"
+      } ],
+      "device_id" : "",
+      "device_owner" : "",
+      "security_groups" : [ {
+         "id" : "c5223b40-834b-404a-940e-75e379c23495"
+      } ],
+      "allowed_address_pairs" : [ ],
+      "binding:host_id" : "",
+      "binding:vnic_type" : "normal",
+      "binding:vif_type" : "unbound",
+      "Map" : {
+      },
+      "extra_dhcp_opts" : [ ],
+      "port_security_enabled" : true
+   }, {
+      "id" : "2e9cf206-3c6e-439d-96c8-b4f58cfdd5b7",
+      "tenant_id" : "1f988557c0e74d2a9c4f7ff8ed27a929",
+      "network_id" : "140dbcfe-3d53-4cc4-aadd-edd571a64383",
+      "name" : "port10",
+      "admin_state_up" : true,
+      "status" : "ACTIVE",
+      "mac_address" : "fa:16:3e:b8:38:d1",
+      "fixed_ips" : [ {
+         "ip_address" : "10.10.10.30",
+         "subnet_id" : "b4baa77e-77c8-486c-aa22-da31c632ad90"
+      } ],
+      "device_id" : "",
+      "device_owner" : "",
+      "security_groups" : [ {
+         "id" : "c5223b40-834b-404a-940e-75e379c23495"
+      } ],
+      "allowed_address_pairs" : [ ],
+      "binding:host_id" : "",
+      "binding:vnic_type" : "normal",
+      "binding:vif_type" : "unbound",
+      "Map" : {
+      },
+      "extra_dhcp_opts" : [ ],
+      "port_security_enabled" : true
+   } ]
+}
+++++++++++
+nova boot  --nic port-id=2e9cf206-3c6e-439d-96c8-b4f58cfdd5b7   --image cirros-0.3.4-x86_64-uec --flavor m1.large VM1 --availability-zone nova:ubuntu-15
+nova boot  --nic port-id=6617e128-7b3a-4919-b77c-24b5d2c9906d   --image cirros-0.3.4-x86_64-uec --flavor m1.large VM2 --availability-zone nova:ubuntu-42
+
+cirros doesnt support vconfig commands to create subport .
+
+press s 
+
+
+another set of vms:
+===================
+nova boot  --nic port-id=2e9cf206-3c6e-439d-96c8-b4f58cfdd5b7   --image ZeroShell --flavor myhuge VM11 --availability-zone nova:ubuntu-15
+nova boot  --nic port-id=6617e128-7b3a-4919-b77c-24b5d2c9906d   --image ZeroShell --flavor myhuge VM22 --availability-zone nova:ubuntu-42
+
+
+table=81 , 21 
+
+
+
+manual logs :
+=============
+root@ubuntu-15:~# virsh list
+ Id    Name                           State
+----------------------------------------------------
+ 404   instance-000001d4              running
+
+root@ubuntu-15:~# virsh console 404
+Connected to domain instance-000001d4
+Escape character is ^]
+-------------------------------------------------------------------------------
+ Z e r o S h e l l - Net Services  3.4.0          March 03, 2017 - 16:44
+-------------------------------------------------------------------------------
+  Hostname : zeroshell.example.com
+  CPU (2)  : QEMU Virtual CPU version 2.5+  2399MHz
+  Kernel   : 3.18.21-ZS
+  Memory   : 1030960 kB                         http://192.168.0.75
+  Uptime   : 0 days, 00:01                      User     : admin
+  Load     : 0.05 0.04 0.02                     Password : zeroshell
+  Profile  : DEFAULT PROFILE
+-------------------------------------------------------------------------------
+ COMMAND MENU
+  <A> Installation Manager          <P> Change admin password
+  <D> Profile Manager               <T> Show Routing Table
+  <S> Shell Prompt                  <F> Show Firewall Rules
+  <R> Reboot                        <N> Show Network Interface
+  <H> Shutdown                      <Z> Fail-Safe Mode
+  <U> Utilities                     <I> IP Manager
+  <W> WiFi Manager
+
+
+                                                Select:
+-------------------------------------------------------------------------------
+ Z e r o S h e l l - Net Services  3.4.0          March 03, 2017 - 16:45
+-------------------------------------------------------------------------------
+  Hostname : zeroshell.example.com
+  CPU (2)  : QEMU Virtual CPU version 2.5+  2399MHz
+  Kernel   : 3.18.21-ZS
+  Memory   : 1030960 kB                         http://192.168.0.75
+  Uptime   : 0 days, 00:02                      User     : admin
+  Load     : 0.02 0.03 0.02                     Password : zeroshell
+  Profile  : DEFAULT PROFILE
+-------------------------------------------------------------------------------
+ COMMAND MENU
+  <A> Installation Manager          <P> Change admin password
+  <D> Profile Manager               <T> Show Routing Table
+  <S> Shell Prompt                  <F> Show Firewall Rules
+  <R> Reboot                        <N> Show Network Interface
+  <H> Shutdown                      <Z> Fail-Safe Mode
+  <U> Utilities                     <I> IP Manager
+  <W> WiFi Manager
+
+
+                                                Select: S
+Type exit or Ctrl+D to return to main menu.
+
+root@zeroshell ~> dhclient ETH00
+Internet Systems Consortium DHCP Client V3.1-ESV
+Copyright 2004-2010 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Listening on LPF/ETH00/fa:16:3e:b8:38:d1
+Sending on   LPF/ETH00/fa:16:3e:b8:38:d1
+Sending on   Socket/fallback
+DHCPDISCOVER on ETH00 to 255.255.255.255 port 67 interval 3
+DHCPOFFER from 10.10.10.1
+DHCPREQUEST on ETH00 to 255.255.255.255 port 67
+DHCPACK from 10.10.10.1
+bound to 10.10.10.30 -- renewal in 71132 seconds.
+root@zeroshell ~> vconfig add ETH00 2000
+WARNING:  Could not open /proc/net/vlan/config.  Maybe you need to load the 8021q module, or maybe you are not using PROCFS??
+Added VLAN with VID == 2000 to IF -:ETH00:-
+root@zeroshell ~> route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         10.10.10.1      0.0.0.0         UG    0      0        0 ETH00
+10.10.10.0      0.0.0.0         255.255.255.0   U     0      0        0 ETH00
+192.168.0.0     0.0.0.0         255.255.255.0   U     0      0        0 ETH00
+192.168.250.0   0.0.0.0         255.255.255.0   U     0      0        0 VPN99
+root@zeroshell ~> dhclient ETH00.2000
+Internet Systems Consortium DHCP Client V3.1-ESV
+Copyright 2004-2010 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Listening on LPF/ETH00.2000/fa:16:3e:b8:38:d1
+Sending on   LPF/ETH00.2000/fa:16:3e:b8:38:d1
+Sending on   Socket/fallback
+DHCPDISCOVER on ETH00.2000 to 255.255.255.255 port 67 interval 5
+DHCPOFFER from 20.10.10.1
+DHCPREQUEST on ETH00.2000 to 255.255.255.255 port 67
+DHCPACK from 20.10.10.1
+bound to 20.10.10.30 -- renewal in 83941 seconds.
+root@zeroshell ~> route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         20.10.10.1      0.0.0.0         UG    0      0        0 ETH00.2000
+0.0.0.0         10.10.10.1      0.0.0.0         UG    0      0        0 ETH00
+10.10.10.0      0.0.0.0         255.255.255.0   U     0      0        0 ETH00
+20.10.10.0      0.0.0.0         255.255.255.0   U     0      0        0 ETH00.2000
+192.168.0.0     0.0.0.0         255.255.255.0   U     0      0        0 ETH00
+192.168.250.0   0.0.0.0         255.255.255.0   U     0      0        0 VPN99
+root@zeroshell ~>
+
+
+
+
+
+
+glance image-create --name "ZeroShell" --disk-format raw  --container-format bare   --file /var/lib/libvirt/images/ZeroShell-qemu_1.img
+
+
++++++++++++++
+
+CREATE BGPVPN:
+neutron bgpvpn-create --name BGPVPN123 --route-distinguishers 300:100 --route-targets 300:100 --import-targets 300:100 --export-targets 300:100
+Associate network to BGPVPN:
+neutron bgpvpn-net-assoc-create --network 6d09d1b5-f5b1-4952-b10c-c615e9dc0026(network_uuid) 42ad07a7-cd07-4991-b4e9-355e862cbf3b(bgpvpn_uuid)
+
+neutron bgpvpn-net-assoc-create --network 140dbcfe-3d53-4cc4-aadd-edd571a64383 dd20aff2-c556-43ee-b82a-f12e6c92cf5d
+
+neutron bgpvpn-net-assoc-create --network ce844297-d52a-4171-a2c7-7e113ddc146c dd20aff2-c556-43ee-b82a-f12e6c92cf5d
+
+
+dissociation:
+=============
+Dissociate Network to BGPVPN:
+neutron bgpvpn-net-assoc-delete 2c993433-31fe-4751-83c9-d7bd2c6e1a96(net_associated_uuid) BGPVPN(vpn_name)
+
+
+
+
+neutron bgpvpn-net-assoc-delete --network 140dbcfe-3d53-4cc4-aadd-edd571a64383 6425d6a8-cb1b-48d1-a63b-3b23b3191a24
+
+neutron bgpvpn-net-assoc-delete --network ce844297-d52a-4171-a2c7-7e113ddc146c 6425d6a8-cb1b-48d1-a63b-3b23b3191a24
+
+sudo ovs-ofctl dump-flows br-int -OOpenflow13
+
+
++++++++++++++++++++++
+
+
+Main port to sub port datapath test was working 
+Sub port to Main port datapath test was working with BGPVPN association. 
+
+Datapath was not working within same hypervisor .
+
+Main port to subport within same hypervisor was not working.
+
+Given below log snippet. 
+
+root@zeroshell ~> ping -I ETH00 -c 3 20.10.10.30
+PING 20.10.10.30 (20.10.10.30) from 10.10.10.30 ETH00: 56(84) bytes of data.
+
+--- 20.10.10.30 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2006ms
+
+root@zeroshell ~> ping -I ETH00 20.10.10.30
+PING 20.10.10.30 (20.10.10.30) from 10.10.10.30 ETH00: 56(84) bytes of data.
+
+--- 20.10.10.30 ping statistics ---
+713 packets transmitted, 0 received, 100% packet loss, time 712003ms
+
+
+
+
+Datacollection script executed and collected logs from runme file and location of logs given below
+
+Server : 10.164.224.211
+++++++++++++++++++++++++
+root@ubuntu:~/NAVEEN_SANDBOX# ls -lrt dump_output-04-03-01-40.tar.gz
+-rw-r--r-- 1 root root 35732857 Mar  4 04:25 dump_output-04-03-01-40.tar.gz
+root@ubuntu:~/NAVEEN_SANDBOX#
+
+
+
++++++++++++++++++++++
+
+ping commands:
+==============
+root@zeroshell ~> ifconfig
+
+ETH00     Link encap:Ethernet  HWaddr FA:16:3E:73:5E:2F
+
+          inet addr:10.10.10.31  Bcast:10.10.10.255  Mask:255.255.255.0
+
+          inet6 addr: fe80::f816:3eff:fe73:5e2f/64 Scope:Link
+
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+
+          RX packets:36 errors:0 dropped:2 overruns:0 frame:0
+
+          TX packets:199 errors:0 dropped:0 overruns:0 carrier:0
+
+          collisions:0 txqueuelen:1000
+
+          RX bytes:2918 (2.8 Kb)  TX bytes:10566 (10.3 Kb)
+
+ 
+
+ETH00.200 Link encap:Ethernet  HWaddr FA:16:3E:73:5E:2F
+
+          inet addr:20.10.10.31  Bcast:20.10.10.255  Mask:255.255.255.0
+
+          inet6 addr: fe80::f816:3eff:fe73:5e2f/64 Scope:Link
+
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+
+          RX packets:17 errors:0 dropped:0 overruns:0 frame:0
+
+          TX packets:97 errors:0 dropped:0 overruns:0 carrier:0
+
+          collisions:0 txqueuelen:0
+
+          RX bytes:1076 (1.0 Kb)  TX bytes:4986 (4.8 Kb)
+
+
+
+
+ping -I ETH00 -c 3 20.10.10.31
+
+ping -I ETH00.2000  -c 3 10.10.10.31
+
+
+ping -I ETH00 -c 3 20.10.10.31
+
+ping -I ETH00.2000  -c 3 10.10.10.31
+
+
+
+
+root@ubuntu-15:~# curl -u admin:admin -X POST -H "Content-Type:application/json" -d @sub_port.json http://10.2.1.4:8080/controller/nb/v2/neutron/ports
+{
+   "port" : {
+      "id" : "33701d04-8e58-4c65-9425-78a80d49a235",
+      "tenant_id" : "1f988557c0e74d2a9c4f7ff8ed27a929",
+      "network_id" : "ce844297-d52a-4171-a2c7-7e113ddc146c",
+      "admin_state_up" : true,
+      "status" : "ACTIVE",
+      "mac_address" : "fa:16:3e:b8:38:d1",
+      "fixed_ips" : [ {
+         "ip_address" : "20.10.10.30",
+         "subnet_id" : "4ab28cc4-5ffc-40b3-8a05-75ccaa0dbf8d"
+      } ],
+      "device_id" : "",
+      "device_owner" : "",
+      "security_groups" : [ {
+         "id" : "c5223b40-834b-404a-940e-75e379c23495"
+      } ],
+      "allowed_address_pairs" : [ ],
+      "binding:host_id" : "kp-openstack",
+      "binding:vnic_type" : "normal",
+      "binding:vif_type" : "ovs",
+      "Map" : {
+         "port_filter" : "false"
+      },
+      "extra_dhcp_opts" : [ ],
+      "trunkport:type" : "subport",
+      "trunkport:parent_id" : "2e9cf206-3c6e-439d-96c8-b4f58cfdd5b7",
+      "trunkport:vid" : 2000,
+      "port_security_enabled" : true
+   }
+}
+
+++++++++++++++
+{"port": {
+
+ 
+
+  "network_id" : "dd9d9150-bf17-47bf-bcea-0481d4930d9a",
+
+  "trunkport:vid":2000,
+
+  "trunkport:type":"subport",
+
+  "mac_address" : "fa:16:3e:51:e3:a0",
+
+  "trunkport:parent_id":"239df24d-1d51-49ca-8374-2319b7c8668f",
+
+   "id" : "33701d04-8e58-4c65-9425-78a80d49a235",
+
+          "tenant_id" : "2ccf2be5803544f2a64743cf469c6d0a",
+
+      "admin_state_up" : "true",
+
+
+subport creation:
+=================
+neutron net-create net20
+neutron subnet-create net20 20.10.10.0/24 --enable-dhcp --name subnet20
+ neutron port-create net20 --name port11 --fixed-ip ip_address=20.10.10.31
+Check trunk is enabled on ports:
+================================
+
+
+curl -u admin:admin -X GET -H "Content Type:application/json" http://10.2.1.4:8080/restconf/operational/odl-l3vpn:vpninstance-op-data
+
+root@ubuntu-15:~# curl -u admin:admin -X GET -H "Content Type:application/json" http://10.2.1.4:8080/restconf/config/ietf-interfaces:interfaces/
+{"interfaces":{"interface":[{"name":"2e9cf206-3c6e-439d-96c8-b4f58cfdd5b7","type":"iana-if-type:l2vlan","odl-interface:l2vlan-mode":"trunk","enabled":true,"aclservice:port-security-enabled":true,"aclservice:security-groups":["c5223b40-834b-404a-940e-75e379c23495"],"aclservice:allowed-address-pairs":[{"mac-address":"fa:16:3e:b8:38:d1","ip-address":"10.10.10.30"},{"mac-address":"fa:16:3e:b8:38:d1","ip-address":"fe80:0:0:0:f816:3eff:feb8:38d1"}]},{"name":"6617e128-7b3a-4919-b77c-24b5d2c9906d","type":"iana-if-type:l2vlan","odl-interface:l2vlan-mode":"trunk","enabled":true,"aclservice:port-security-enabled":true,"aclservice:security-groups":["c5223b40-834b-404a-940e-75e379c23495"],"aclservice:allowed-address-pairs":[{"mac-address":"fa:16:3e:73:5e:2f","ip-address":"10.10.10.31"},{"mac-address":"fa:16:3e:73:5e:2f","ip-address":"fe80:0:0:0:f816:3eff:fe73:5e2f"}]}]}}
+
+
+
+
+Subport:
+
+ 
+
+{"port": {
+
+ 
+
+  "network_id" : "dd9d9150-bf17-47bf-bcea-0481d4930d9a",
+
+  "trunkport:vid":2000,
+
+  "trunkport:type":"subport",
+
+  "mac_address" : "fa:16:3e:51:e3:a0",
+
+  "trunkport:parent_id":"239df24d-1d51-49ca-8374-2319b7c8668f",
+
+   "id" : "33701d04-8e58-4c65-9425-78a80d49a235",
+
+          "tenant_id" : "2ccf2be5803544f2a64743cf469c6d0a",
+
+      "admin_state_up" : "true",
+
+"binding:vif_details": [
+
+          {
+
+            "port_filter": false
+
+          }
+
+        ],
+
+        "binding:vif_type": "ovs",
+
+        "binding:vnic_type": "normal",
+
+         "binding:host_id": "kp-openstack",
+
+                                
+
+      "fixed_ips" : [
+
+         {
+
+                  "subnet_id" : "ff28bf38-11fd-47f5-bcfd-014e810036e9",
+
+                  "ip_address" : "20.20.20.20"
+
+ 
+
+                 }
+
+       ],
+
+       "device_id": "",
+
+    "device_owner": "",
+
+    "security_groups": [],
+
+    "allowed_address_pairs": [],
+
+    "Map": {},
+
+    "extra_dhcp_opts": [],
+
+    "port_security_enabled": false
+
+   }}
+
+
+   
+   
+ root@zeroshell ~> ifconfig ETH00
+ETH00     Link encap:Ethernet  HWaddr FA:16:3E:B8:38:D1
+          inet addr:10.10.10.30  Bcast:10.10.10.255  Mask:255.255.255.0
+          inet6 addr: fe80::f816:3eff:feb8:38d1/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:512 errors:0 dropped:2 overruns:0 frame:0
+          TX packets:673 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:26530 (25.9 Kb)  TX bytes:49667 (48.5 Kb)
+
+root@zeroshell ~> ifconfig ETH00.2000
+ETH00.200 Link encap:Ethernet  HWaddr FA:16:3E:B8:38:D1
+          inet addr:20.10.10.30  Bcast:20.10.10.255  Mask:255.255.255.0
+          inet6 addr: fe80::f816:3eff:feb8:38d1/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:151 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:158 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:7124 (6.9 Kb)  TX bytes:11220 (10.9 Kb)
+
+root@zeroshell ~>
+
+Datapath test:
+===============
+root@zeroshell ~> ping -I ETH00.2000 20.10.10.31
+PING 20.10.10.31 (20.10.10.31) from 20.10.10.30 ETH00.2000: 56(84) bytes of data.
+64 bytes from 20.10.10.31: icmp_seq=1 ttl=64 time=0.492 ms
+64 bytes from 20.10.10.31: icmp_seq=2 ttl=64 time=0.272 ms
+64 bytes from 20.10.10.31: icmp_seq=3 ttl=64 time=0.225 ms
+64 bytes from 20.10.10.31: icmp_seq=4 ttl=64 time=0.221 ms
+64 bytes from 20.10.10.31: icmp_seq=5 ttl=64 time=0.220 ms
+64 bytes from 20.10.10.31: icmp_seq=6 ttl=64 time=0.221 ms
+
+--- 20.10.10.31 ping statistics ---
+6 packets transmitted, 6 received, 0% packet loss, time 4999ms
+rtt min/avg/max/mdev = 0.220/0.275/0.492/0.099 ms
+root@zeroshell ~> ping -I ETH00 20.10.10.31
+PING 20.10.10.31 (20.10.10.31) from 10.10.10.30 ETH00: 56(84) bytes of data.
+64 bytes from 20.10.10.31: icmp_seq=1 ttl=64 time=0.546 ms
+64 bytes from 20.10.10.31: icmp_seq=2 ttl=64 time=0.278 ms
+64 bytes from 20.10.10.31: icmp_seq=3 ttl=64 time=0.190 ms
+
+--- 20.10.10.31 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 0.190/0.338/0.546/0.151 ms
+root@zeroshell ~>
+
+
+Entries in .15 server:
+=====================
+
+root@ubuntu-15:/var/lib/libvirt/images# sudo ovs-ofctl dump-flows br-int -OOpenflow13 | grep table=81
+ cookie=0x122c239c, duration=1510.531s, table=81, n_packets=8, n_bytes=336, priority=100,arp,metadata=0xc0199a00000222e2/0xffffff00fffffffe,arp_tpa=10.10.10.1,arp_op=1 actions=move:NXM_OF_ETH_SRC[]->NXM_OF_ETH_DST[],set_field:de:ad:be:ef:00:03->eth_src,load:0x2->NXM_OF_ARP_OP[],move:NXM_NX_ARP_SHA[]->NXM_NX_ARP_THA[],move:NXM_OF_ARP_SPA[]->NXM_OF_ARP_TPA[],load:0xdeadbeef0003->NXM_NX_ARP_SHA[],load:0xa0a0a01->NXM_OF_ARP_SPA[],load:0->NXM_OF_IN_PORT[],load:0x199a00->NXM_NX_REG6[],resubmit(,220)
+ cookie=0x1c2c3d50, duration=1502.498s, table=81, n_packets=0, n_bytes=0, priority=100,arp,metadata=0xc0334e00000222e2/0xffffff00fffffffe,arp_tpa=20.10.10.1,arp_op=1 actions=move:NXM_OF_ETH_SRC[]->NXM_OF_ETH_DST[],set_field:de:ad:be:ef:00:03->eth_src,load:0x2->NXM_OF_ARP_OP[],move:NXM_NX_ARP_SHA[]->NXM_NX_ARP_THA[],move:NXM_OF_ARP_SPA[]->NXM_OF_ARP_TPA[],load:0xdeadbeef0003->NXM_NX_ARP_SHA[],load:0x140a0a01->NXM_OF_ARP_SPA[],load:0->NXM_OF_IN_PORT[],push_vlan:0x8100,set_field:6096->vlan_vid,load:0x334e00->NXM_NX_REG6[],resubmit(,220)
+ cookie=0x8220000, duration=19357.823s, table=81, n_packets=207, n_bytes=9002, priority=0 actions=drop
+root@ubuntu-15:/var/lib/libvirt/images#
+root@ubuntu-15:/var/lib/libvirt/images#
+root@ubuntu-15:/var/lib/libvirt/images#
+root@ubuntu-15:/var/lib/libvirt/images#
+root@ubuntu-15:/var/lib/libvirt/images# sudo ovs-ofctl dump-flows br-int -OOpenflow13 | grep table=21
+ cookie=0x8000003, duration=1584.858s, table=21, n_packets=160, n_bytes=15680, priority=42,ip,metadata=0x222e2/0xfffffffe,nw_dst=20.10.10.31 actions=set_field:0x128ea->tun_id,set_field:fa:16:3e:73:5e:2f->eth_dst,output:12
+root@ubuntu-15:/var/lib/libvirt/images#
+root@ubuntu-15:/var/lib/libvirt/images#  
+  
+ 42 server:
+============
+ root@ubuntu-42:~# sudo ovs-ofctl dump-flows br-int -OOpenflow13 | grep table=81
+ cookie=0x122c239d, duration=1550.116s, table=81, n_packets=1, n_bytes=42, priority=100,arp,metadata=0xc0199b00000222e2/0xffffff00fffffffe,arp_tpa=10.10.10.1,arp_op=1 actions=move:NXM_OF_ETH_SRC[]->NXM_OF_ETH_DST[],set_field:de:ad:be:ef:00:03->eth_src,load:0x2->NXM_OF_ARP_OP[],move:NXM_NX_ARP_SHA[]->NXM_NX_ARP_THA[],move:NXM_OF_ARP_SPA[]->NXM_OF_ARP_TPA[],load:0xdeadbeef0003->NXM_NX_ARP_SHA[],load:0xa0a0a01->NXM_OF_ARP_SPA[],load:0->NXM_OF_IN_PORT[],load:0x199b00->NXM_NX_REG6[],resubmit(,220)
+ cookie=0x1c2c3d49, duration=1542.075s, table=81, n_packets=13, n_bytes=598, priority=100,arp,metadata=0xc0334700000222e2/0xffffff00fffffffe,arp_tpa=20.10.10.1,arp_op=1 actions=move:NXM_OF_ETH_SRC[]->NXM_OF_ETH_DST[],set_field:de:ad:be:ef:00:03->eth_src,load:0x2->NXM_OF_ARP_OP[],move:NXM_NX_ARP_SHA[]->NXM_NX_ARP_THA[],move:NXM_OF_ARP_SPA[]->NXM_OF_ARP_TPA[],load:0xdeadbeef0003->NXM_NX_ARP_SHA[],load:0x140a0a01->NXM_OF_ARP_SPA[],load:0->NXM_OF_IN_PORT[],push_vlan:0x8100,set_field:6096->vlan_vid,load:0x334700->NXM_NX_REG6[],resubmit(,220)
+ cookie=0x8220000, duration=19400.495s, table=81, n_packets=540, n_bytes=23240, priority=0 actions=drop
+root@ubuntu-42:~#
+root@ubuntu-42:~#
+root@ubuntu-42:~# sudo ovs-ofctl dump-flows br-int -OOpenflow13 | grep table=21
+ cookie=0x8000003, duration=3739.367s, table=21, n_packets=0, n_bytes=0, priority=42,ip,metadata=0x222e0/0xfffffffe,nw_dst=20.10.10.30 actions=set_field:0x128ea->tun_id,set_field:fa:16:3e:b8:38:d1->eth_dst,output:7
+ cookie=0x8000003, duration=1561.929s, table=21, n_packets=5, n_bytes=490, priority=42,ip,metadata=0x222e2/0xfffffffe,nw_dst=20.10.10.31 actions=group:155003
+root@ubuntu-42:~#
+
+

@@ -1,0 +1,409 @@
+Git process steps:
+++++++++++++++++++
+
+#### GIT Steps to commit , ammend changes , branch creation with commited changes , switching branches ####
+
+
+
+root@ubuntu:~/naveen/xft6# git clone ssh://navin.nani777@git.opendaylight.org:29418/integration/test
+root@ubuntu:~/naveen/xft6/fresh_git_22feb/test# git config --global user.email "naveenk.t@tcs.com"
+root@ubuntu:~/naveen/xft6/fresh_git_22feb/test# git config --global user.name "naveen"
+root@ubuntu:~/naveen/xft6/fresh_git_22feb/test# scp -p -P 29418 navin.nani777@git.opendaylight.org:hooks/commit-msg .git/hooks/
+commit-msg                                                                                        100% 4662     4.6KB/s   00:00
+root@ubuntu:~/naveen/xft6/fresh_git_22feb/test#  chmod 755 .git/hooks/commit-msg
+root@ubuntu:~/naveen/xft6/fresh_git_22feb/test# git add csit/suites/openflowplugin/Clustering_Bulkomatic/010__Cluster_Reconcilliatio
+n_Multi_DPN.robot csit/testplans/openflowplugin-clustering.txt
+root@ubuntu:~/naveen/xft6/fresh_git_22feb/test# git commit -a -s -m "Verify medium config SF142"
+[master b14dd07] Verify medium config SF142
+ 2 files changed, 15 insertions(+), 11 deletions(-)
+ rewrite csit/testplans/openflowplugin-clustering.txt (94%)
+root@ubuntu:~/naveen/xft6/fresh_git_22feb/test# git status
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working directory clean
+root@ubuntu:~/naveen/xft6/fresh_git_22feb/test# git push  ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git HEAD:r
+efs/for/master
+Counting objects: 61, done.
+Delta compression using up to 32 threads.
+Compressing objects: 100% (9/9), done.
+Writing objects: 100% (9/9), 941 bytes | 0 bytes/s, done.
+Total 9 (delta 8), reused 0 (delta 0)
+remote: Resolving deltas: 100% (8/8)
+remote: Processing changes: new: 1, refs: 1, done
+remote:
+remote: New Changes:
+remote:   https://git.opendaylight.org/gerrit/52139 Verify medium config SF142
+remote:
+To ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git
+ * [new branch]      HEAD -> refs/for/master
+root@ubuntu:~/naveen/xft6/fresh_git_22feb/test#
+##############GIT steps to append changes to same review immediately ######
+git status
+#edit file with changes and do <git add>
+git add csit/suites/openflowplugin/Clustering_Bulkomatic/020__Cluster_HA_Data_Recovery_BulkFlow_2Node_Cluster.robot
+git commit --amend # Add a commit message which describes your changes
+git push  ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git HEAD:refs/for/master
+##########END of GIT steps for same review id ###########
+
+#####################################################
+git process changes from one review to another review
+#####################################################
+git review changes:
+===================
+If you want to go to particular commit like commit A and commit B , do below steps.
+git log # copy commit message from output
+git checkout <c72d1117860117414460e76002aa1a7b94018384> # commit id of commit A
+Now do a checkout for local , which will create a branch
+git checkout -b 3node_cluster #It will create a branch locally with your commit A changes present
+Now do the changes
+git commit --amend # add commit message
+git push
+################################
+example given below with steps:
+===============================
+################################
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/test# git log
+commit 1a90e528ccb891872a0b040677e5e9b04181a497
+Author: naveen <naveenk.t@tcs.com>
+Date:   Thu Mar 16 21:07:48 2017 +0530
+
+    Please Review script 3Node cluster with changes
+
+    Change-Id: I5ab7d3fcc0187df9c76e3be31182c460a881c1de
+    Signed-off-by: naveen <naveenk.t@tcs.com>
+
+commit c72d1117860117414460e76002aa1a7b94018384  #========>>>>commit id
+Author: naveen <naveenk.t@tcs.com>
+Date:   Tue Mar 14 13:44:15 2017 +0530
+
+    Please Review 3Node Cluster script , removed testplan file for script
+
+    Change-Id: I5ab7d3fcc0187df9c76e3be31182c460a881c1de
+    Signed-off-by: naveen <naveenk.t@tcs.com>
+
+commit e950fcce0dbce447573cba14bed63e6713218b03
+Author: Vratko Polak <vrpolak@cisco.com>
+Date:   Mon Mar 13 16:26:35 2017 +0100
+
+    Retry once in first dsbenchmark test case
+
+    Change-Id: I8efd8a437f3918708d47a7facc0a23a241bc5bb3
+    Signed-off-by: Vratko Polak <vrpolak@cisco.com>
+
+commit 9cc2315cb721da1c5b0eaf8ce9600a9419379782
+Author: Martin Mihálek <mamihale@cisco.com>
+Date:   Mon Mar 13 15:04:59 2017 +0100
+
+    Convert arguments of CompareStream into String
+#######################################
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/test# git checkout c72d1117860117414460e76002aa1a7b94018384 # commit A id
+Warning: you are leaving 1 commit behind, not connected to
+any of your branches:
+
+  1a90e52 Please Review script 3Node cluster with changes
+
+If you want to keep them by creating a new branch, this may be a good time
+to do so with:
+
+ git branch new_branch_name 1a90e52
+
+HEAD is now at c72d111... Please Review 3Node Cluster script , removed testplan file for script
+########################################
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/test# git checkout -b 3node_cluster
+Switched to a new branch '3node_cluster'
+#######################################
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/test# git commit --amend
+[3node_cluster a187067] 3 Node Cluster Verify 10k flows per switch with single switch
+ 1 file changed, 17 insertions(+), 13 deletions(-)
+ ######################################
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/test# git status
+On branch 3node_cluster
+nothing to commit, working directory clean
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/test# git push  ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git HEAD:refs/for/maste
+r
+Counting objects: 1, done.
+Writing objects: 100% (1/1), 274 bytes | 0 bytes/s, done.
+Total 1 (delta 0), reused 0 (delta 0)
+remote: Processing changes: updated: 1, refs: 1, done
+remote: (W) a187067: no files changed, message updated
+remote:
+remote: Updated Changes:
+remote:   https://git.opendaylight.org/gerrit/53252 3 Node Cluster Verify 10k flows per switch with single switch
+remote:
+To ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git
+ * [new branch]      HEAD -> refs/for/master
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/test#
+#########END OF GIT PROCESS#############
+
+##############################################################
+cherry pick and do changes for existing pushed file to gerrit:
+##############################################################
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+create a folder with <releng_builder>
+do a git cone for releng/builder under builder
+create a branch with name <yaml_files> under builder directory
+do a git fetch and cherrypick from review url
+do changes to existing yaml file and do git add
+git commit --amend and git push
+Example given below.
+=====================
+mkdir releng_builder
+cd releng_builder
+git clone https://git.opendaylight.org/gerrit/releng/builder
+git checkout -b yaml_file # it will create new branch
+git fetch https://git.opendaylight.org/gerrit/releng/builder refs/changes/01/53501/4 && git cherry-pick FETCH_HEAD # It will get changes
+of review into local machine
+git branch -v #checking status of branch
+git add openflowplugin-csit-bulkomatic-perf-daily.yaml # Adding files to git after modification
+git status
+git commit --amend # Commit changes to git repository
+git push  ssh://navin.nani777@git.opendaylight.org:29418/releng/builder.git HEAD:refs/for/master # Push the changes to releng/builder
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Once we do changes to our local branch , we can rebase it with master . Switch to local branch and do git checkout master then git pull . It will add changes to your local branch along with master branch changes.
+Now your branch is in sync with master branch changes. 
+If you want to modify some file , you can do git add and git rebase --continue . This will be in editing mode when you are doing git rebase.
+
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git branch -v
+  current_term_OF18 cbf6c7d Verification of OF18 current Term
+* master            9814651 Add port-op-data to odl models dump
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test#
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git checkout current_term_OF18
+Switched to branch 'current_term_OF18'
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git status
+On branch current_term_OF18
+nothing to commit, working directory clean
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git push  ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git HEAD:refs/for/master
+Counting objects: 83, done.
+Delta compression using up to 32 threads.
+Compressing objects: 100% (12/12), done.
+Writing objects: 100% (12/12), 2.91 KiB | 0 bytes/s, done.
+Total 12 (delta 8), reused 0 (delta 0)
+remote: Resolving deltas: 100% (8/8)
+remote: Processing changes: refs: 1, done
+remote:
+remote: ERROR:  In commit cbf6c7d08b0fd8b26027e504e70f4e5bae382548
+remote: ERROR:  committer email address <some address>
+remote: ERROR:  does not match your user account.
+remote: ERROR:
+remote: ERROR:  The following addresses are currently registered:
+remote: ERROR:    naveenk.t@tcs.com
+remote: ERROR:
+remote: ERROR:  To register an email address, please visit:
+remote: ERROR:  https://git.opendaylight.org/gerrit/#/settings/contact
+remote:
+remote:
+To ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git
+ ! [remote rejected] HEAD -> refs/for/master (invalid committer)
+error: failed to push some refs to 'ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git'
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git config --global user.email "user@domain.com"
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git config --global user.name "user"
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git status
+On branch current_term_OF18
+nothing to commit, working directory clean
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# vi csit/suites/openflowplugin/ROBUSTNESS_OF18/010__Cluster_Current_Term_Verification_3Node_Cluster.robot
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git log
+commit cbf6c7d08b0fd8b26027e504e70f4e5bae382548
+Author: naveen <user@domain.com>
+Date:   Mon Mar 27 22:35:49 2017 +0530
+
+    Verification of OF18 current Term
+
+    Change-Id: I21cb25420d984db1da4f2a0d1e9a34c589afa3ce
+    Signed-off-by: naveen <user@domain.com>
+
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git status
+On branch current_term_OF18
+nothing to commit, working directory clean
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git checkout de7615f43ae1e34b35339666bd3e62d8edb61bab
+Note: checking out 'de7615f43ae1e34b35339666bd3e62d8edb61bab'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b new_branch_name
+
+HEAD is now at de7615f... Verification of OF18 current Term
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git branch -v
+* (detached from de7615f) de7615f Verification of OF18 current Term
+  current_term_OF18       cbf6c7d Verification of OF18 current Term
+  master                  9814651 Add port-op-data to odl models dump
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test#
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git checkout current_term_OF18
+Warning: you are leaving 1 commit behind, not connected to
+any of your branches:
+
+  de7615f Verification of OF18 current Term
+
+If you want to keep them by creating a new branch, this may be a good time
+to do so with:
+
+ git branch new_branch_name de7615f
+
+Switched to branch 'current_term_OF18'
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git log
+commit cbf6c7d08b0fd8b26027e504e70f4e5bae382548
+Author: naveen <user@domain.com>
+Date:   Mon Mar 27 22:35:49 2017 +0530
+
+    Verification of OF18 current Term
+
+    Change-Id: I21cb25420d984db1da4f2a0d1e9a34c589afa3ce
+    Signed-off-by: naveen <user@domain.com>
+
+
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git push  ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git HEAD:refs/for/master
+Counting objects: 83, done.
+Delta compression using up to 32 threads.
+Compressing objects: 100% (12/12), done.
+Writing objects: 100% (12/12), 2.91 KiB | 0 bytes/s, done.
+Total 12 (delta 8), reused 0 (delta 0)
+remote: Resolving deltas: 100% (8/8)
+remote: Processing changes: refs: 1, done
+remote:
+remote: ERROR:  In commit cbf6c7d08b0fd8b26027e504e70f4e5bae382548
+remote: ERROR:  committer email address user@domain.com
+remote: ERROR:  does not match your user account.
+remote: ERROR:
+remote: ERROR:  The following addresses are currently registered:
+remote: ERROR:    user1@domain.com
+remote: ERROR:
+remote: ERROR:  To register an email address, please visit:
+remote: ERROR:  https://git.opendaylight.org/gerrit/#/settings/contact
+remote:
+remote:
+To ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git
+ ! [remote rejected] HEAD -> refs/for/master (invalid committer)
+error: failed to push some refs to 'ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git'
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test#
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test#
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git branch -v
+* current_term_OF18 cbf6c7d Verification of OF18 current Term
+  master            9814651 Add port-op-data to odl models dump
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git config --list
+user.email=user@domain.com
+user.name=naveen
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+remote.origin.url=ssh://navin.nani777@git.opendaylight.org:29418/integration/test
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.master.remote=origin
+branch.master.merge=refs/heads/master
+
+
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git config --global --list
+user.email=user@domain.com
+user.name=naveen
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git config user.email "user@domain.com"
+
+To avoid the below error:
++++++++++++++++++++++++++
+<committer email address does not match your user account>
+
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git commit --amend --reset-author
+[current_term_OF18 640276a] Verification of OF18 current Term
+ 4 files changed, 155 insertions(+), 9 deletions(-)
+ create mode 100755 csit/suites/openflowplugin/ROBUSTNESS_OF18/010__Cluster_Current_Term_Verification_3Node_Cluster.robot
+ rewrite csit/testplans/openflowplugin-clustering.txt (94%)
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git push  ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git HEAD:refs/for/master
+Counting objects: 83, done.
+Delta compression using up to 32 threads.
+Compressing objects: 100% (12/12), done.
+Writing objects: 100% (12/12), 2.88 KiB | 0 bytes/s, done.
+Total 12 (delta 8), reused 0 (delta 0)
+remote: Resolving deltas: 100% (8/8)
+remote: Processing changes: updated: 1, refs: 1, done
+remote:
+remote: Updated Changes:
+remote:   https://git.opendaylight.org/gerrit/53886 Verification of OF18 current Term
+remote:
+To ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git
+ * [new branch]      HEAD -> refs/for/master
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test#
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git branch -v
+* current_term_OF18 640276a Verification of OF18 current Term
+  master            9814651 Add port-op-data to odl models dump
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git rebase master
+First, rewinding head to replay your work on top of it...
+Applying: Verification of OF18 current Term
+Using index info to reconstruct a base tree...
+M       csit/libraries/ClusterManagement.robot
+M       csit/testplans/openflowplugin-clustering.txt
+<stdin>:118: trailing whitespace.
+    Log    Build is not yet mergred into ODL
+<stdin>:175: trailing whitespace.
+integration/test/csit/suites/openflowplugin/ROBUSTNESS_OF18/010__Cluster_Current_Term_Verification_3Node_Cluster.robot
+warning: 2 lines add whitespace errors.
+Falling back to patching base and 3-way merge...
+Auto-merging csit/testplans/openflowplugin-clustering.txt
+CONFLICT (content): Merge conflict in csit/testplans/openflowplugin-clustering.txt
+Auto-merging csit/libraries/ClusterManagement.robot
+Failed to merge in the changes.
+Patch failed at 0001 Verification of OF18 current Term
+The copy of the patch that failed is found in:
+   /root/NAVEEN_SANDBOX/xft6/OF18_test/test/.git/rebase-apply/patch
+
+When you have resolved this problem, run "git rebase --continue".
+If you prefer to skip this patch, run "git rebase --skip" instead.
+To check out the original branch and stop rebasing, run "git rebase --abort".
+
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# vi csit/testplans/openflowplugin-clustering.txt
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git rebase --continue
+csit/testplans/openflowplugin-clustering.txt: needs merge
+You must edit all merge conflicts and then
+mark them as resolved using git add
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git status
+rebase in progress; onto 9814651
+You are currently rebasing branch 'current_term_OF18' on '9814651'.
+  (fix conflicts and then run "git rebase --continue")
+  (use "git rebase --skip" to skip this patch)
+  (use "git rebase --abort" to check out the original branch)
+
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+        modified:   csit/libraries/ClusterManagement.robot
+        new file:   csit/suites/openflowplugin/ROBUSTNESS_OF18/010__Cluster_Current_Term_Verification_3Node_Cluster.robot
+        modified:   csit/testplans/openflowplugin-scalability.txt
+
+Unmerged paths:
+  (use "git reset HEAD <file>..." to unstage)
+  (use "git add <file>..." to mark resolution)
+
+        both modified:      csit/testplans/openflowplugin-clustering.txt
+
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git add csit/testplans/openflowplugin-clustering.txt
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git rebase --continue
+Applying: Verification of OF18 current Term
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git log
+commit 7f52cf9a214e9665b8fff581dec504747feeb4a0
+Author: naveen <user@domain.com>
+Date:   Tue Apr 11 02:03:09 2017 +0530
+
+    Verification of OF18 current Term
+
+    Change-Id: I21cb25420d984db1da4f2a0d1e9a34c589afa3ce
+    Signed-off-by: naveen <user@domain.com>
+
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test#
+root@ubuntu:~/NAVEEN_SANDBOX/xft6/OF18_test/test# git push  ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git HEAD:refs/for/master
+Counting objects: 81, done.
+Delta compression using up to 32 threads.
+Compressing objects: 100% (9/9), done.
+Writing objects: 100% (9/9), 1.09 KiB | 0 bytes/s, done.
+Total 9 (delta 6), reused 0 (delta 0)
+remote: Resolving deltas: 100% (6/6)
+remote: Processing changes: updated: 1, refs: 1, done
+remote:
+remote: Updated Changes:
+remote:   https://git.opendaylight.org/gerrit/53886 Verification of OF18 current Term
+remote:
+To ssh://navin.nani777@git.opendaylight.org:29418/integration/test.git
+ * [new branch]      HEAD -> refs/for/master

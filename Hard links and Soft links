@@ -1,0 +1,276 @@
+
+
+Simply , Hard link : is just add new name to a file, that's mean , a file can have many name in the same time, all name are equal to each other, no one preferred, Hard link is not mean to copy the all contents of file and make new file is not that, it just create an alternative name to be known..
+
+
+Hard link : Creating hard link is like having same file with different name with same contents. inode number gets copied for hard link.
+inode number is same while creating hard link
+If you have f4 and f5 . f4 is original and created a hard link f5. Changes in f4 will apply in f5 also.
+If you remove f4 means main file , f5 still exists
+
+
+*** inode number created will be same for hard links and not for soft links***
+
+One more advantage of hard link:
+================================
+You can create hard link in any path. 
+contents will be same in both files. If you do changes in one file, it will get replication in another file too. Both will be in sync.
+
+root@Ubuntu-G50-80:/home/Nani/naveen/python# ln f5 /home/Nani/naveen/f6
+root@Ubuntu-G50-80:/home/Nani/naveen/python# cat /home/Nani/naveen/f6
+Hai welcome to summer
+root@Ubuntu-G50-80:/home/Nani/naveen/python# 
+
+root@Ubuntu-G50-80:/home/Nani/naveen# cat f6
+Hai welcome to summer
+root@Ubuntu-G50-80:/home/Nani/naveen# ls python/f1
+python/f1
+root@Ubuntu-G50-80:/home/Nani/naveen# cat python/f1
+Hello world\n Hai welcome to mahadevpura
+root@Ubuntu-G50-80:/home/Nani/naveen# cat python/f5
+Hai welcome to summer
+root@Ubuntu-G50-80:/home/Nani/naveen# cat python/f6
+cat: python/f6: No such file or directory
+root@Ubuntu-G50-80:/home/Nani/naveen# cat f6
+Hai welcome to summer
+root@Ubuntu-G50-80:/home/Nani/naveen# 
+root@Ubuntu-G50-80:/home/Nani/naveen# 
+root@Ubuntu-G50-80:/home/Nani/naveen# echo "This is India" >> f6
+root@Ubuntu-G50-80:/home/Nani/naveen# echo "We are in Bangalore" >> f6
+root@Ubuntu-G50-80:/home/Nani/naveen# cat f6
+Hai welcome to summer
+This is India
+We are in Bangalore
+root@Ubuntu-G50-80:/home/Nani/naveen# cat python/f5
+Hai welcome to summer
+This is India
+We are in Bangalore
+root@Ubuntu-G50-80:/home/Nani/naveen# 
+
+
+Example:
+========
+root@Ubuntu-G50-80:/home/Nani/naveen/python# touch f4
+root@Ubuntu-G50-80:/home/Nani/naveen/python# ls -il f4
+43657597 -rw-r--r-- 1 root root 0 May 10 10:30 f4
+root@Ubuntu-G50-80:/home/Nani/naveen/python# ln f4 f5
+root@Ubuntu-G50-80:/home/Nani/naveen/python# ls -il f4 f5
+43657597 -rw-r--r-- 2 root root 0 May 10 10:30 f4
+43657597 -rw-r--r-- 2 root root 0 May 10 10:30 f5
+root@Ubuntu-G50-80:/home/Nani/naveen/python# cat f4
+root@Ubuntu-G50-80:/home/Nani/naveen/python# cat f5
+root@Ubuntu-G50-80:/home/Nani/naveen/python# echo "Hai welcome to summer" >> f4
+root@Ubuntu-G50-80:/home/Nani/naveen/python# cat f4
+Hai welcome to summer
+root@Ubuntu-G50-80:/home/Nani/naveen/python# cat f5
+Hai welcome to summer
+root@Ubuntu-G50-80:/home/Nani/naveen/python#
+root@Ubuntu-G50-80:/home/Nani/naveen/python# rm f4
+root@Ubuntu-G50-80:/home/Nani/naveen/python# ls -il f5
+43657597 -rw-r--r-- 1 root root 22 May 10 10:31 f5
+root@Ubuntu-G50-80:/home/Nani/naveen/python# cat f5
+Hai welcome to summer
+
+
+
+
+
+
+
+
+Symbolic link (symlink) : is a file pointer to another file, if the symbolic link points to an existing file which is later deleted, the symbolic link continues to point to the same file name even though the name no longer names any file.
+
+
+
+
+Hard link points to contents of the file not to file path:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Nani@Ubuntu-G50-80:~/naveen/links$ touch n1 n2
+Nani@Ubuntu-G50-80:~/naveen/links$ ls
+n1  n2
+Nani@Ubuntu-G50-80:~/naveen/links$ ls -il
+total 0
+43781275 -rw-rw-r-- 1 Nani Nani 0 Apr 24 10:04 n1
+43781277 -rw-rw-r-- 1 Nani Nani 0 Apr 24 10:04 n2
+
+Creating hard links :
++++++++++++++++++++++
+Hard links points to inode number which means index number of the file.
+<ls -il> gives the list of inode info for all files in that directory.
+Using this cmd create hard link <ln file1 file1-hard> 
+Below given example:
+++++++++++++++++++++
+Nani@Ubuntu-G50-80:~/naveen/links$ ln n1 n1-hard 
+Nani@Ubuntu-G50-80:~/naveen/links$ ls -il
+total 0
+43781275 -rw-rw-r-- 2 Nani Nani 0 Apr 24 10:04 n1
+43781275 -rw-rw-r-- 2 Nani Nani 0 Apr 24 10:04 n1-hard
+43781277 -rw-rw-r-- 1 Nani Nani 0 Apr 24 10:04 n2
+Nani@Ubuntu-G50-80:~/naveen/links$ cp n2 n3
+Nani@Ubuntu-G50-80:~/naveen/links$ ls -il
+total 0
+43781275 -rw-rw-r-- 2 Nani Nani 0 Apr 24 10:04 n1
+43781275 -rw-rw-r-- 2 Nani Nani 0 Apr 24 10:04 n1-hard
+43781277 -rw-rw-r-- 1 Nani Nani 0 Apr 24 10:04 n2
+43781278 -rw-rw-r-- 1 Nani Nani 0 Apr 24 10:04 n3
+Nani@Ubuntu-G50-80:~/naveen/links$ echo "naveenkumar" > n1
+Nani@Ubuntu-G50-80:~/naveen/links$ cat n1-hard
+naveenkumar
+Nani@Ubuntu-G50-80:~/naveen/links$ cat n1
+naveenkumar
+Nani@Ubuntu-G50-80:~/naveen/links$ echo "nanikumar" >> n1
+Nani@Ubuntu-G50-80:~/naveen/links$ cat n1
+naveenkumar
+nanikumar
+Nani@Ubuntu-G50-80:~/naveen/links$ cat n1-hard
+naveenkumar
+nanikumar
+Nani@Ubuntu-G50-80:~/naveen/links$ echo "maheshkumar" >> n1-hard
+Nani@Ubuntu-G50-80:~/naveen/links$ cat n1-hard
+naveenkumar
+nanikumar
+maheshkumar
+Nani@Ubuntu-G50-80:~/naveen/links$ cat n1
+naveenkumar
+nanikumar
+maheshkumar
+Nani@Ubuntu-G50-80:~/naveen/links$ mv n1 n1_org-hard
+Nani@Ubuntu-G50-80:~/naveen/links$ cat n1
+cat: n1: No such file or directory
+Nani@Ubuntu-G50-80:~/naveen/links$ cat n1-hard
+naveenkumar
+nanikumar
+maheshkumar
+Nani@Ubuntu-G50-80:~/naveen/links$ ls -il
+total 8
+43781275 -rw-rw-r-- 2 Nani Nani 34 Apr 24 10:07 n1-hard
+43781275 -rw-rw-r-- 2 Nani Nani 34 Apr 24 10:07 n1_org-hard
+43781277 -rw-rw-r-- 1 Nani Nani  0 Apr 24 10:04 n2
+43781278 -rw-rw-r-- 1 Nani Nani  0 Apr 24 10:04 n3
+Nani@Ubuntu-G50-80:~/naveen/links$ echo "nikhilkumar" >> n1_org-hard
+Nani@Ubuntu-G50-80:~/naveen/links$ cat n1-hard
+naveenkumar
+nanikumar
+maheshkumar
+nikhilkumar
+Nani@Ubuntu-G50-80:~/naveen/links$ cat n1_org-hard
+naveenkumar
+nanikumar
+maheshkumar
+nikhilkumar
+Nani@Ubuntu-G50-80:~/naveen/links$
+
+Hard link points to contents of the file not to file path
+
+
+Nani@Ubuntu-G50-80:~/naveen/links$ ls -il
+total 8
+43781275 -rw-rw-r-- 2 Nani Nani 55 Apr 24 10:22 n1-hard
+43781277 -rw-rw-r-- 1 Nani Nani  0 Apr 24 10:04 n2
+43781278 -rw-rw-r-- 1 Nani Nani  0 Apr 24 10:04 n3
+43781279 -rw-rw-r-- 1 Nani Nani 40 Apr 24 10:35 s1
+43781280 lrwxrwxrwx 1 Nani Nani  2 Apr 24 10:16 s2-soft -> s1
+43781282 lrwxrwxrwx 1 Nani Nani  2 Apr 24 10:34 s3-soft -> s1
+
+Nani@Ubuntu-G50-80:~/naveen/links$ ln n1-hard n1-hard-hl
+
+Nani@Ubuntu-G50-80:~/naveen/links$ ls -il
+total 12
+43781275 -rw-rw-r-- 3 Nani Nani 55 Apr 24 10:22 n1-hard
+43781275 -rw-rw-r-- 3 Nani Nani 55 Apr 24 10:22 n1-hard-hl
+43781277 -rw-rw-r-- 1 Nani Nani  0 Apr 24 10:04 n2
+43781278 -rw-rw-r-- 1 Nani Nani  0 Apr 24 10:04 n3
+43781279 -rw-rw-r-- 1 Nani Nani 40 Apr 24 10:35 s1
+43781280 lrwxrwxrwx 1 Nani Nani  2 Apr 24 10:16 s2-soft -> s1
+43781282 lrwxrwxrwx 1 Nani Nani  2 Apr 24 10:34 s3-soft -> s1
+
+Nani@Ubuntu-G50-80:~/naveen/links$ ls -il ../n1_org-hard 
+43781275 -rw-rw-r-- 3 Nani Nani 55 Apr 24 10:22 ../n1_org-hard
+
+Nani@Ubuntu-G50-80:~/naveen/links$ cat n1-hard-hl
+naveenkumar
+nanikumar
+maheshkumar
+nikhilkumar
+murugesh
+Nani@Ubuntu-G50-80:~/naveen/links$
+
+Soft links:
+============
+ln -s : cmd to create soft link
+
+
+
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ touch s1 s2
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ ln -s s1 s1-soft
+
+*** inode numbers will be different for soft links. Once original file is removed , created one will be of no use. ***
+
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ ls -il
+total 0
+43781301 -rw-rw-r-- 1 Nani Nani 0 Apr 24 10:48 s1
+43781316 lrwxrwxrwx 1 Nani Nani 2 Apr 24 10:48 s1-soft -> s1
+
+Created soft links and inodes are different for s1 and s2-soft files.
+
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ cat s1
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ cat s1-soft
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ 
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ echo "welcome_to_Nani" >> s1
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ cat s1
+welcome_to_Nani
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ cat s1-soft
+welcome_to_Nani
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ 
+
+If s1 is deleted s1-soft will not work, because s1-soft points to file path of s1 , not the contents of s1.
+
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ cat s1
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ cat s1-soft
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ 
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ echo "welcome_to_Nani" >> s1
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ cat s1
+welcome_to_Nani
+Nani@Ubuntu-G50-80:~/naveen/soft_links$ cat s1-soft
+welcome_to_Nani
+Nani@Ubuntu-G50-80:~/naveen/soft_links$  
+
+
+Examples:
+=========
+F5 is main file and created soft link using f5 .
+
+
+-rw-r--r-- 2 root     root          56 May 10 13:50 f5
+lrwxrwxrwx 1 root     root           2 May 10 13:55 f7 -> f5
+root@Ubuntu-G50-80:/home/Nani/naveen/python# ls -lrt f6
+ls: cannot access f6: No such file or directory
+root@Ubuntu-G50-80:/home/Nani/naveen/python# ls -lrt f7
+lrwxrwxrwx 1 root root 2 May 10 13:55 f7 -> f5
+root@Ubuntu-G50-80:/home/Nani/naveen/python# ls -lrt f5
+-rw-r--r-- 2 root root 56 May 10 13:50 f5
+root@Ubuntu-G50-80:/home/Nani/naveen/python# cat f5
+Hai welcome to summer
+This is India
+We are in Bangalore
+root@Ubuntu-G50-80:/home/Nani/naveen/python# 
+root@Ubuntu-G50-80:/home/Nani/naveen/python# 
+root@Ubuntu-G50-80:/home/Nani/naveen/python# cat f7
+Hai welcome to summer
+This is India
+We are in Bangalore
+
+
+Now deleting main file f5 and check f7 file :
+++++++++++++++++++++++++++++++++++++++++++++++
+In this file its not showing because , usually if you see on terminal , It will turn black in color that means file is not usable. 
+root@Ubuntu-G50-80:/home/Nani/naveen/python# ls -lrt
+lrwxrwxrwx 1 root     root           2 May 10 13:55 f7 -> f5 ----> file doesn't exists(Color is not shown in notepad file)
+root@Ubuntu-G50-80:/home/Nani/naveen/python#
+root@Ubuntu-G50-80:/home/Nani/naveen/python# ls f7
+f7
+root@Ubuntu-G50-80:/home/Nani/naveen/python# cat f7
+cat: f7: No such file or directory
+root@Ubuntu-G50-80:/home/Nani/naveen/python# 
+

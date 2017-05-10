@@ -1,0 +1,37 @@
+chmod 755 file2.py 
+chmod 755 fh.py
+chmod a+x test11.txt
+touch chmodfile
+ls -l chmodfile
+chmod o+x chmodfile
+ls -l chmodfile
+chmod g+x chmodfile
+ls -l chmodfile
+chmod 000 chmodfile
+ls -l chmodfile
+cat chmodfile 
+vi chmodfile 
+chmod a+x o+w chmodfile
+chmod a+x chmodfile
+ls -l chmodfile
+chmod o+x chmodfile
+chmod o+r chmodfile
+chmod o+w chmodfile
+ls -l chmodfile
+chmod u+w chmodfile
+ls -l chmodfile
+chmod g+w chmodfile
+ls -l chmodfile
+chmod u+r chmodfile
+chmod g+r chmodfile
+ls -l chmodfile
+ln chmodfile f1
+ln -s chmodfile f2
+echo "Hello world\n Hai welcome to mahadevpura" >> chmodfile
+cat chmodfile 
+cp chmodfile chfile
+ls -il chmodfile
+ls -il f1 f2 chmodfile
+rm chmodfile
+chmod a+x f1
+history | grep chmod

@@ -1,0 +1,156 @@
+>>> time = "16:30:10"
+>>> print time
+16:30:10
+>>> hrs , mins , secs = time.split(':')
+>>> print hrs
+16  
+>>> print mins
+30  
+>>> print secs
+10  
+>>> s = "Naveen"
+>>> a,b,c,d,e,f = s
+>>> print a
+N   
+>>> print b
+a   
+>>> print c
+v   
+>>> print d
+e   
+>>> print e
+e   
+>>> print f
+n   
+>>> x="Naveen Kumar"
+>>> print x
+Naveen Kumar
+replace function:
++++++++++++++++++
+>>> x.replace('K','k')
+'Naveen kumar'
+>>> time.partition()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: partition() takes exactly one argument (0 given)
+>>> time.partition(':')
+('16', ':', '30:10')
+>>> time.partition(':')
+('16', ':', '30:10')
+
+>>> time.rpartition(':')
+('16:30', ':', '10')
+>>> print time
+16:30:10
+
+>>> time.rsplit(':',0)
+['16:30:10']
+
+>>> time.rsplit(':',1)
+['16:30', '10']
+
+>>> time.rsplit(':',6)
+['16', '30', '10']
+
+>>> abc = 'twenty three'
+
+>>> print abc
+twenty three
+
+>>> f = abc.split()
+>>> print f
+['twenty', 'three']
+>>> abc.replace('e','a',2)
+'twanty thrae'
+
+>>> abc.replace('e','a',3)
+'twanty thraa'
+
+>>> print abc
+twenty three
+
+>>> abc.capitalize()
+'Twenty three'
+
+>>> abc.lower()
+'twenty three'
+
+>>> abc.upper()
+'TWENTY THREE'
+
+
+
+>>> list1 = [1,2,3,4,5]
+>>> list2 = [6,7,8,9,10]
+>>> zip(list1,list2)
+[(1, 6), (2, 7), (3, 8), (4, 9), (5, 10)]
+>>> list3 = zip(list1,list2)
+>>> zip(list1,list2)
+[(1, 6), (2, 7), (3, 8), (4, 9), (5, 10)]
+>>> list3 = zip(list1,list2)
+>>> print list3[1]
+(2, 7)
+>>> list4 = dict(zip(list1,list2))
+>>> print list4
+{1: 6, 2: 7, 3: 8, 4: 9, 5: 10}
+>>> d = {k: None for k in list1}
+>>> print d
+{1: None, 2: None, 3: None, 4: None, 5: None}
+>>> d = {k: v for k in list1 for v in list2}
+>>> print d
+{1: 10, 2: 10, 3: 10, 4: 10, 5: 10}
+>>> import itertools
+>>> d1 = (itertools.izip(list1,list2))
+>>> print d1
+<itertools.izip object at 0x7fb4b41201b8>
+>>> keys = (name,age,rank)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'name' is not defined
+>>> keys = ('name','age','rank')
+>>> values = ('naveen','12','5')
+>>> print keys
+('name', 'age', 'rank')
+>>> print type(keys)
+<type 'tuple'>
+>>> d12 = itertools.izip(keys,values)
+>>> print d12
+<itertools.izip object at 0x7fb4b42d8ef0>
+>>> d12 = dict(itertools.izip(keys,values))
+>>> print d12
+{'age': '12', 'name': 'naveen', 'rank': '5'}
+>>> d1 = dict(itertools.izip(list1,list2))
+>>> print d1
+{1: 6, 2: 7, 3: 8, 4: 9, 5: 10}
+>>> print d1
+>>> numbers = [1, 5, 10, 8];
+>>> new_numbers = [];
+>>> for n in numbers:
+...     new_numbers.append(int(n));
+... numbers = new_numbers;
+  File "<stdin>", line 3
+    numbers = new_numbers;
+          ^
+SyntaxError: invalid syntax
+>>> numbers = [ int(x) for x in numbers ]
+>>> print numbers
+[1, 5, 10, 8]
+>>> numbers = [1, 5, 10, 8,'atr','djdb','dwbd',2,3,4,7,6];
+>>> print numbers
+[1, 5, 10, 8, 'atr', 'djdb', 'dwbd', 2, 3, 4, 7, 6]
+>>> numbers = [ int(x) for x in numbers ]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: invalid literal for int() with base 10: 'atr'
+>>> numbers = [ x for x in numbers if isinstance(x,int)]
+>>> print numbers
+[1, 5, 10, 8, 2, 3, 4, 7, 6]
+>>> numbers = [ x for x in numbers if isinstance(x,str)]
+>>> print numbers
+[]
+>>> numbers = [1, 5, 10, 8,'atr','djdb','dwbd',2,3,4,7,6];
+>>> numbers = [ x for x in numbers if isinstance(x,str)]
+>>> print numbers
+['atr', 'djdb', 'dwbd']
+
+

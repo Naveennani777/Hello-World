@@ -434,6 +434,27 @@ example1.log                hello.txt          pexpect11.py           robot2.rob
 example.log                 if_else.py         pexpect1.py            robot2.txt
 f1                          import_package.py  pwd.txt                robot3.robot
 0   
+    
+                                                                                          
+                                                                                          >>> s1 = next(os.walk(os.getcwd()))
+>>> print s1
+('/home/spanidea/naveen/python', ['robotframework-requests-0.4.7', 'newdir', 'openstack', 'Animals', 'Package1'], ['log_file.py', 'rev_1.pyc', 'a', 're', 'a.txt', 'test2.xml', 'pexpect1.py', 'max_digit.py', 'copied_data_through_screen', 'dict1.py', 'dis_module.py', 'file123.txt', 'f1', 'list_comprehension.py', 'hello.txt', 'file_open1.py', 'pexpect11.py', 'robot1.txt', 'list_int.py', 'xft7.txt', 'xft8.txt', 'reverse_list.py', 'file_handling.py', 'test11.txt', 'file2.py', 'modules_os_subprocess_glob_commands.py', 'robot2.txt', 'aqw', 'robotframework-requests-0.4.7.tar.gz', 'store_cmd_output_to_file.py', 'aqwq', 'rev_1.py', 'file3.py', 'if_else.py', 'for_loop.py', 'simple1.py', 'set_comprehension.py', 'sys_stdout.py', 'python.zip', 'example1.log', 'python_practise111.py~', 'python_practise111.py', 'asd', 'outfile123.txt', 'file_hello.py', 'log.html', 'file2.robot', 'length.py', 'f3', 'example.log', 'hai.txt', 'f2.txt', 'range.py', 'fh.py', 'ip_addresses.txt', 'pwd.txt', 'robot1.rebot', 'append.py', 'output.xml', 'report.html', 'python1_bkp.py', 'file333.txt', 'as', 'testfile.txt', 'even_or_odd.python', 'even_or_odd.py', 'dict.py', 'file1.robot', 'split_lines_in_text_file.py', 'chfile', '.list_comprehension.py.swp', 'wa', 're_org', 'filee.txt', 'set1.py', 'log_2.xml', 'read_file.py', 'teest.py', 'import_package.py', 'decorator.py', 'log_1.xml', 'regex_state.py', 're_org.txt', 'python1.py', 'count_list.robot', 'logging.pyc', 'file_open.py', 'robot3.robot', 'test1.xml', 'robot2.robot', 'life.txt', 'log.txt', 'sys_cmds.py'])
+>>> 
+>>> # prints exact path 
+>>> s1 = next(os.walk(os.getcwd()))[0]
+>>> print s1
+/home/spanidea/naveen/python
+### Prints sub directories under this path /home/spanidea/naveen/python
+>>> s2 = next(os.walk(os.getcwd()))[1]
+>>> print s2
+['robotframework-requests-0.4.7', 'newdir', 'openstack', 'Animals', 'Package1']
+### Prints files under this path /home/spanidea/naveen/python
+>>> s3 = next(os.walk(os.getcwd()))[2]
+>>> print s3
+['log_file.py', 'rev_1.pyc', 'a', 're', 'a.txt', 'test2.xml', 'pexpect1.py', 'max_digit.py', 'copied_data_through_screen', 'dict1.py', 'dis_module.py', 'file123.txt', 'f1', 'list_comprehension.py', 'hello.txt', 'file_open1.py', 'pexpect11.py', 'robot1.txt', 'list_int.py', 'xft7.txt', 'xft8.txt', 'reverse_list.py', 'file_handling.py', 'test11.txt', 'file2.py', 'modules_os_subprocess_glob_commands.py', 'robot2.txt', 'aqw', 'robotframework-requests-0.4.7.tar.gz', 'store_cmd_output_to_file.py', 'aqwq', 'rev_1.py', 'file3.py', 'if_else.py', 'for_loop.py', 'simple1.py', 'set_comprehension.py', 'sys_stdout.py', 'python.zip', 'example1.log', 'python_practise111.py~', 'python_practise111.py', 'asd', 'outfile123.txt', 'file_hello.py', 'log.html', 'file2.robot', 'length.py', 'f3', 'example.log', 'hai.txt', 'f2.txt', 'range.py', 'fh.py', 'ip_addresses.txt', 'pwd.txt', 'robot1.rebot', 'append.py', 'output.xml', 'report.html', 'python1_bkp.py', 'file333.txt', 'as', 'testfile.txt', 'even_or_odd.python', 'even_or_odd.py', 'dict.py', 'file1.robot', 'split_lines_in_text_file.py', 'chfile', '.list_comprehension.py.swp', 'wa', 're_org', 'filee.txt', 'set1.py', 'log_2.xml', 'read_file.py', 'teest.py', 'import_package.py', 'decorator.py', 'log_1.xml', 'regex_state.py', 're_org.txt', 'python1.py', 'count_list.robot', 'logging.pyc', 'file_open.py', 'robot3.robot', 'test1.xml', 'robot2.robot', 'life.txt', 'log.txt', 'sys_cmds.py']
+>>> 
+
+                                                                                          
 
 >>> subprocess.call(['ls', '-l'])
 total 18452

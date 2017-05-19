@@ -470,6 +470,81 @@ drwxr-xr-x 2 root     root        4096 May 15 16:13 Animals
 -rw-r--r-- 1 root     root         620 May  5 09:53 count_list.robot
 -rwxr-xr-x 1 root     root        1190 May  4 15:04 decorator.py
 -rwxrwxr-x 1 spanidea spanidea    1209 May  4 11:37 dict1.py
+                                                                                          
+
+  >>> os.getcwd()
+'/home/spanidea/naveen/python'
+>>> os.listdir(os.getcwd())
+['log_file.py', 'rev_1.pyc', 'a', 're', 'a.txt', 'test2.xml', 'pexpect1.py', 'max_digit.py', 'copied_data_through_screen', 'dict1.py', 'dis_modu
+le.py', 'file123.txt', 'f1', 'list_comprehension.py', 'hello.txt', 'file_open1.py', 'pexpect11.py', 'robot1.txt', 'list_int.py', 'xft7.txt', 'xf
+t8.txt', 'reverse_list.py', 'file_handling.py', 'robotframework-requests-0.4.7', 'test11.txt', 'file2.py', 'modules_os_subprocess_glob_commands.
+py', 'robot2.txt', 'aqw', 'robotframework-requests-0.4.7.tar.gz', 'store_cmd_output_to_file.py', 'aqwq', 'rev_1.py', 'file3.py', 'if_else.py', '
+for_loop.py', 'create_module.py', 'simple1.py', 'newdir', 'set_comprehension.py', 'openstack', 'sys_stdout.py', 'python.zip', 'example1.log', 'p
+ython_practise111.py~', 'python_practise111.py', 'asd', 'outfile123.txt', 'file_hello.py', 'log.html', 'file2.robot', 'length.py', 'f3', 'exampl
+e.log', 'hai.txt', 'f2.txt', 'range.py', 'fh.py', 'ip_addresses.txt', 'pwd.txt', 'robot1.rebot', 'append.py', 'output.xml', 'report.html', 'pyth
+on1_bkp.py', 'file333.txt', 'as', 'testfile.txt', 'Animals', 'even_or_odd.python', 'even_or_odd.py', 'dict.py', 'file1.robot', 'split_lines_in_t
+ext_file.py', 'chfile', '.list_comprehension.py.swp', 'wa', 're_org', 'filee.txt', 'set1.py', 'log_2.xml', 'read_file.py', 'teest.py', 'import_p
+ackage.py', 'Package1', 'decorator.py', 'log_1.xml', 'regex_state.py', 're_org.txt', 'python1.py', 'count_list.robot', 'logging.pyc', 'file_open
+.py', 'modules_os_subprocess_glob_commands.py~', 'robot3.robot', 'test1.xml', 'robot2.robot', 'life.txt', 'log.txt', 'sys_cmds.py']
+
+>>> print x
+/home/spanidea/naveen/python
+>>> x = '/usr/lib/nani'
+>>> print x
+/usr/lib/nani
+
+>>> y = os.listdir(os.getcwd())
+>>> print y
+['log_file.py', 'rev_1.pyc', 'a', 're', 'a.txt', 'test2.xml', 'pexpect1.py', 'max_digit.py', 'copied_data_through_screen', 'dict1.py', 'dis_module.py', 'file123.txt', 'f1', 'list_comprehension.py', 'hello.txt', 'file_open1.py', 'pexpect11.py', 'robot1.txt', 'list_int.py', 'xft7.txt', 'xft8.txt', 'reverse_list.py', 'file_handling.py', 'robotframework-requests-0.4.7', 'test11.txt', 'file2.py', 'modules_os_subprocess_glob_commands.py', 'robot2.txt', 'aqw', 'robotframework-requests-0.4.7.tar.gz', 'store_cmd_output_to_file.py', 'aqwq', 'rev_1.py', 'file3.py', 'if_else.py', 'for_loop.py', 'create_module.py', 'simple1.py', 'newdir', 'set_comprehension.py', 'openstack', 'sys_stdout.py', 'python.zip', 'example1.log', 'python_practise111.py~', 'python_practise111.py', 'asd', 'outfile123.txt', 'file_hello.py', 'log.html', 'file2.robot', 'length.py', 'f3', 'example.log', 'hai.txt', 'f2.txt', 'range.py', 'fh.py', 'ip_addresses.txt', 'pwd.txt', 'robot1.rebot', 'append.py', 'output.xml', 'report.html', 'python1_bkp.py', 'file333.txt', 'as', 'testfile.txt', 'Animals', 'even_or_odd.python', 'even_or_odd.py', 'dict.py', 'file1.robot', 'split_lines_in_text_file.py', 'chfile', '.list_comprehension.py.swp', 'wa', 're_org', 'filee.txt', 'set1.py', 'log_2.xml', 'read_file.py', 'teest.py', 'import_package.py', 'Package1', 'decorator.py', 'log_1.xml', 'regex_state.py', 're_org.txt', 'python1.py', 'count_list.robot', 'logging.pyc', 'file_open.py', 'modules_os_subprocess_glob_commands.py~', 'robot3.robot', 'test1.xml', 'robot2.robot', 'life.txt', 'log.txt', 'sys_cmds.py']
+>>> 
+
+>>> for i in y:
+...     if i.endswith(".txt"):
+...         os.path.join(x,i)
+... 
+'/usr/lib/nani/a.txt'
+'/usr/lib/nani/file123.txt'
+'/usr/lib/nani/hello.txt'
+'/usr/lib/nani/robot1.txt'
+'/usr/lib/nani/xft7.txt'
+'/usr/lib/nani/xft8.txt'
+'/usr/lib/nani/test11.txt'
+'/usr/lib/nani/robot2.txt'
+'/usr/lib/nani/outfile123.txt'
+'/usr/lib/nani/hai.txt'
+'/usr/lib/nani/f2.txt'
+'/usr/lib/nani/ip_addresses.txt'
+'/usr/lib/nani/pwd.txt'
+'/usr/lib/nani/file333.txt'
+'/usr/lib/nani/testfile.txt'
+'/usr/lib/nani/filee.txt'
+'/usr/lib/nani/re_org.txt'
+'/usr/lib/nani/life.txt'
+'/usr/lib/nani/log.txt'
+>>> 
+
+##### Find the largest number from a given list , List is input from user ####
+
+#!/usr/bin/python
+a=[]
+n=int(input("Enter number of elements:"))
+for i in range(1,n+1):
+    b=int(input("Enter element:"))
+    a.append(b)
+    a.sort()
+print("Largest element is:",a[n-1])
+
+ 
+output:
+=======
+Enter number of elements:5
+Enter element:34
+Enter element:21
+Enter element:78
+Enter element:100
+Enter element:2
+('Largest element is:', 100)
+                            
 
 
 

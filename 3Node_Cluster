@@ -1,0 +1,522 @@
+3 Node Cluster Feature explained with curl commands:
+====================================================
+
+Steps to write flows and check read status:
+============================================
+1)Write flows 
+2)Check writeop status
+3)Read flows
+4)ReadOpstatus
+
+
+commands:
+==========
+######################
+######################
+1) Write flows 
+######################
+######################
+
+curl -u admin:admin -X POST -H "Content-Type:application/json" -d @add_flow.json http://10.183.181.71:8080/restconf/operations/sal-bulk-flow:flow-test -v
+
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# more add_flow.json
+{
+"input" :
+  {
+   "sal-bulk-flow:is-add" : "true",
+   "sal-bulk-flow:dpn-count" : "15",
+   "sal-bulk-flow:flows-per-dpn" : "6600",
+   "sal-bulk-flow:batch-size" : "1",
+   "sal-bulk-flow:seq" : "false",
+   "sal-bulk-flow:tx-chain" : "true",
+   "sal-bulk-flow:sleep-for" : "0",
+   "sal-bulk-flow:sleep-after" : "1",
+   "sal-bulk-flow:start-table-id" : "0",
+   "sal-bulk-flow:end-table-id" : "1"
+  }
+}
+
+######################
+######################
+2)Check writeop status
+######################
+######################
+
+value:2 ==> Flows are written successful.
+
+curl -u admin:admin -X GET -H "Content-Type:application/json" http://10.183.181.71:8080/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/WriteOpStatus -v
+
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# curl -u admin:admin -X GET -H "Content-Type:application/json" http://10.183.181.71:8080/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/WriteOpStatus -v
+* Hostname was NOT found in DNS cache
+*   Trying 10.183.181.71...
+* Connected to 10.183.181.71 (10.183.181.71) port 8080 (#0)
+* Server auth using Basic with user 'admin'
+> GET /jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/WriteOpStatus HTTP/1.1
+> Authorization: Basic YWRtaW46YWRtaW4=
+> User-Agent: curl/7.35.0
+> Host: 10.183.181.71:8080
+> Accept: */*
+> Content-Type:application/json
+>
+< HTTP/1.1 200 OK
+< Content-Type: text/plain;charset=UTF-8
+< Cache-Control: no-cache
+< Pragma: no-cache
+< Date: Fri, 10 Feb 2017 21:50:29 GMT
+< Expires: Fri, 10 Feb 2017 20:50:29 GMT
+< Content-Length: 186
+* Server Jetty(8.1.19.v20160209) is not blacklisted
+< Server: Jetty(8.1.19.v20160209)
+<
+* Connection #0 to host 10.183.181.71 left intact
+
+Output:
+=======
+
+{"request":{"mbean":"org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter","attribute":"WriteOpStatus","type":"read"},"value":2,"timestamp":1486763429,"status":200}
+
+######################################
+######################################
+3)Check Read flows with below command:
+######################################
+######################################
+
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# vi read_flows_10dpns.json
+{
+"input" :
+  {
+   "sal-bulk-flow:verbose" : "false",
+   "sal-bulk-flow:dpn-count" : "10",
+   "sal-bulk-flow:is-config-ds" : "true",
+   "sal-bulk-flow:flows-per-dpn" : "1000",
+   "sal-bulk-flow:start-table-id" : "0",
+   "sal-bulk-flow:end-table-id" : "1"
+  }
+}
+
+curl -u admin:admin -X POST -H "Content-Type:application/json" -d @read_flows_10dpns.json http://10.183.181.71:8080/restconf/operations/sal-bulk-flow:read-flow-test -v
+
+curl -u admin:admin -X POST -H "Content-Type:application/json" -d @read_flows_10dpns.json http://10.183.181.72:8080/restconf/operations/sal-bulk-flow:read-flow-test -v
+
+curl -u admin:admin -X POST -H "Content-Type:application/json" -d @read_flows_10dpns.json http://10.183.181.73:8080/restconf/operations/sal-bulk-flow:read-flow-test -v
+
+
+Read flows will not give any output.
+
+example:
+=========
+
+cnode1:
+=======
+
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# curl -u admin:admin -X POST -H "Content-Type:application/json" -d @read_flows_10dpns.json http://10.183.181.71:8080/restconf/operations/sal-bulk-flow:read-flow-test -v
+* Hostname was NOT found in DNS cache
+*   Trying 10.183.181.71...
+* Connected to 10.183.181.71 (10.183.181.71) port 8080 (#0)
+* Server auth using Basic with user 'admin'
+> POST /restconf/operations/sal-bulk-flow:read-flow-test HTTP/1.1
+> Authorization: Basic YWRtaW46YWRtaW4=
+> User-Agent: curl/7.35.0
+> Host: 10.183.181.71:8080
+> Accept: */*
+> Content-Type:application/json
+> Content-Length: 250
+>
+* upload completely sent off: 250 out of 250 bytes
+< HTTP/1.1 200 OK
+< Set-Cookie: JSESSIONID=1utkmbig1lecy1az07huuho23m;Path=/restconf
+< Expires: Thu, 01 Jan 1970 00:00:00 GMT
+< Set-Cookie: rememberMe=deleteMe; Path=/restconf; Max-Age=0; Expires=Thu, 09-Feb-2017 21:59:43 GMT
+< Content-Type: application/yang.operation+json
+< Content-Length: 0
+* Server Jetty(8.1.19.v20160209) is not blacklisted
+< Server: Jetty(8.1.19.v20160209)
+<
+* Connection #0 to host 10.183.181.71 left intact
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin#
+
+
+
+cnode2:
+=======
+root@mininet-vm:/home/mininet/controller-Bo/distribution-karaf-0.5.2-Boron-SR2/bin# ofvar
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# ls
+add_bulk_flow.json  add_flow_rpc.json  delete_flow_rpc.json           sal_add_flow1.json             sal_get_bulk_flow_config.json  sample_flow_2.json
+add_flow.json       add_flow.sh        sal_add_bulk_flow_config.json  sal_del_bulk_flow_config.json  sample_flow_1.json             test_add.json
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# vi read_flows_10dpns.json
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# curl -u admin:admin -X POST -H "Content-Type:application/json" -d @read_flows_10dpns.json http://10.183.181.72:8080/restconf/operations/sal-bulk-flow:read-flow-test -v
+* Hostname was NOT found in DNS cache
+*   Trying 10.183.181.72...
+* Connected to 10.183.181.72 (10.183.181.72) port 8080 (#0)
+* Server auth using Basic with user 'admin'
+> POST /restconf/operations/sal-bulk-flow:read-flow-test HTTP/1.1
+> Authorization: Basic YWRtaW46YWRtaW4=
+> User-Agent: curl/7.35.0
+> Host: 10.183.181.72:8080
+> Accept: */*
+> Content-Type:application/json
+> Content-Length: 250
+>
+* upload completely sent off: 250 out of 250 bytes
+< HTTP/1.1 200 OK
+< Set-Cookie: JSESSIONID=5q9vh49eoakvis4hxd4j9s4n;Path=/restconf
+< Expires: Thu, 01 Jan 1970 00:00:00 GMT
+< Set-Cookie: rememberMe=deleteMe; Path=/restconf; Max-Age=0; Expires=Thu, 09-Feb-2017 22:01:25 GMT
+< Content-Type: application/yang.operation+json
+< Content-Length: 0
+* Server Jetty(8.1.19.v20160209) is not blacklisted
+< Server: Jetty(8.1.19.v20160209)
+<
+* Connection #0 to host 10.183.181.72 left intact
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin#
+
+
+cnode3:
+========
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# vi read_flows_10dpns.json
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# curl -u admin:admin -X POST -H "Content-Type:application/json" -d @read_flows_10dpns.json http://10.183.181.73:8080/restconf/operations/sal-bulk-flow:read-flow-test -v
+* Hostname was NOT found in DNS cache
+*   Trying 10.183.181.73...
+* Connected to 10.183.181.73 (10.183.181.73) port 8080 (#0)
+* Server auth using Basic with user 'admin'
+> POST /restconf/operations/sal-bulk-flow:read-flow-test HTTP/1.1
+> Authorization: Basic YWRtaW46YWRtaW4=
+> User-Agent: curl/7.35.0
+> Host: 10.183.181.73:8080
+> Accept: */*
+> Content-Type:application/json
+> Content-Length: 250
+>
+* upload completely sent off: 250 out of 250 bytes
+< HTTP/1.1 200 OK
+< Set-Cookie: JSESSIONID=197z2krnsdvk81ooszz0ynai5m;Path=/restconf
+< Expires: Thu, 01 Jan 1970 00:00:00 GMT
+< Set-Cookie: rememberMe=deleteMe; Path=/restconf; Max-Age=0; Expires=Thu, 09-Feb-2017 22:02:07 GMT
+< Content-Type: application/yang.operation+json
+< Content-Length: 0
+* Server Jetty(8.1.19.v20160209) is not blacklisted
+< Server: Jetty(8.1.19.v20160209)
+<
+* Connection #0 to host 10.183.181.73 left intact
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin#
+
+######################
+######################
+4)ReadOpStatus:
+######################
+######################
+
+curl -u admin:admin -X GET -H "Content Type:application/json" http://10.183.181.71:8080/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/ReadOpStatus -v
+
+cnode1:
+========
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# curl -u admin:admin -X GET -H "Content Type:application/json" http://10.183.181.71:8080/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/ReadOpStatus -v
+* Hostname was NOT found in DNS cache
+*   Trying 10.183.181.71...
+* Connected to 10.183.181.71 (10.183.181.71) port 8080 (#0)
+* Server auth using Basic with user 'admin'
+> GET /jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/ReadOpStatus HTTP/1.1
+> Authorization: Basic YWRtaW46YWRtaW4=
+> User-Agent: curl/7.35.0
+> Host: 10.183.181.71:8080
+> Accept: */*
+> Content Type:application/json
+>
+< HTTP/1.1 200 OK
+< Content-Type: text/plain;charset=UTF-8
+< Cache-Control: no-cache
+< Pragma: no-cache
+< Date: Fri, 10 Feb 2017 22:07:42 GMT
+< Expires: Fri, 10 Feb 2017 21:07:42 GMT
+< Content-Length: 185
+* Server Jetty(8.1.19.v20160209) is not blacklisted
+< Server: Jetty(8.1.19.v20160209)
+<
+* Connection #0 to host 10.183.181.71 left intact
+{"request":{"mbean":"org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter","attribute":"ReadOpStatus","type":"read"},"value":2,"timestamp":1486764462,"status":200}
+
+
+cnode2:
+=======
+
+curl -u admin:admin -X GET -H "Content Type:application/json" http://10.183.181.72:8080/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/ReadOpStatus -v
+
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# curl -u admin:admin -X GET -H "Content Type:application/json" http://10.183.181.72:8080/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/ReadOpStatus -v
+* Hostname was NOT found in DNS cache
+*   Trying 10.183.181.72...
+* Connected to 10.183.181.72 (10.183.181.72) port 8080 (#0)
+* Server auth using Basic with user 'admin'
+> GET /jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/ReadOpStatus HTTP/1.1
+> Authorization: Basic YWRtaW46YWRtaW4=
+> User-Agent: curl/7.35.0
+> Host: 10.183.181.72:8080
+> Accept: */*
+> Content Type:application/json
+>
+< HTTP/1.1 200 OK
+< Content-Type: text/plain;charset=UTF-8
+< Cache-Control: no-cache
+< Pragma: no-cache
+< Date: Fri, 10 Feb 2017 22:08:39 GMT
+< Expires: Fri, 10 Feb 2017 21:08:39 GMT
+< Content-Length: 185
+* Server Jetty(8.1.19.v20160209) is not blacklisted
+< Server: Jetty(8.1.19.v20160209)
+<
+* Connection #0 to host 10.183.181.72 left intact
+{"request":{"mbean":"org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter","attribute":"ReadOpStatus","type":"read"},"value":2,"timestamp":1486764519,"status":200}
+
+
+
+cnode3:
+=======
+curl -u admin:admin -X GET -H "Content Type:application/json" http://10.183.181.73:8080/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/ReadOpStatus -v
+
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# curl -u admin:admin -X GET -H "Content Type:application/json" http://10.183.181.73:8080/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/ReadOpStatus -v
+* Hostname was NOT found in DNS cache
+*   Trying 10.183.181.73...
+* Connected to 10.183.181.73 (10.183.181.73) port 8080 (#0)
+* Server auth using Basic with user 'admin'
+> GET /jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/ReadOpStatus HTTP/1.1
+> Authorization: Basic YWRtaW46YWRtaW4=
+> User-Agent: curl/7.35.0
+> Host: 10.183.181.73:8080
+> Accept: */*
+> Content Type:application/json
+>
+< HTTP/1.1 200 OK
+< Content-Type: text/plain;charset=UTF-8
+< Cache-Control: no-cache
+< Pragma: no-cache
+< Date: Fri, 10 Feb 2017 22:09:59 GMT
+< Expires: Fri, 10 Feb 2017 21:09:59 GMT
+< Content-Length: 185
+* Server Jetty(8.1.19.v20160209) is not blacklisted
+< Server: Jetty(8.1.19.v20160209)
+<
+* Connection #0 to host 10.183.181.73 left intact
+{"request":{"mbean":"org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter","attribute":"ReadOpStatus","type":"read"},"value":2,"timestamp":1486764599,"status":200}
+
+
+###############################
+###############################
+Flow count command with output:
+###############################
+###############################
+cnode1:
+=======
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# curl -u admin:admin -X GET -H "Content-Type:application/json" http://10.183.181.71:8080/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/FlowCount -v
+
+* Hostname was NOT found in DNS cache
+*   Trying 10.183.181.71...
+* Connected to 10.183.181.71 (10.183.181.71) port 8080 (#0)
+* Server auth using Basic with user 'admin'
+> GET /jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/FlowCount HTTP/1.1
+> Authorization: Basic YWRtaW46YWRtaW4=
+> User-Agent: curl/7.35.0
+> Host: 10.183.181.71:8080
+> Accept: */*
+> Content-Type:application/json
+>
+< HTTP/1.1 200 OK
+< Content-Type: text/plain;charset=UTF-8
+< Cache-Control: no-cache
+< Pragma: no-cache
+< Date: Fri, 10 Feb 2017 21:50:40 GMT
+< Expires: Fri, 10 Feb 2017 20:50:40 GMT
+< Content-Length: 186
+* Server Jetty(8.1.19.v20160209) is not blacklisted
+< Server: Jetty(8.1.19.v20160209)
+<
+* Connection #0 to host 10.183.181.71 left intact
+{"request":{"mbean":"org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter","attribute":"FlowCount","type":"read"},"value":10000,"timestamp":1486763440,"status":200}
+
+
+cnode2:
+========
+
+curl -u admin:admin -X GET -H "Content-Type:application/json" http://10.183.181.72:8080/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/FlowCount -v
+
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# curl -u admin:admin -X GET -H "Content-Type:application/json" http://10.183.181.72:8080/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/FlowCount -v
+* Hostname was NOT found in DNS cache
+*   Trying 10.183.181.72...
+* Connected to 10.183.181.72 (10.183.181.72) port 8080 (#0)
+* Server auth using Basic with user 'admin'
+> GET /jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/FlowCount HTTP/1.1
+> Authorization: Basic YWRtaW46YWRtaW4=
+> User-Agent: curl/7.35.0
+> Host: 10.183.181.72:8080
+> Accept: */*
+> Content-Type:application/json
+>
+< HTTP/1.1 200 OK
+< Content-Type: text/plain;charset=UTF-8
+< Cache-Control: no-cache
+< Pragma: no-cache
+< Date: Fri, 10 Feb 2017 22:12:35 GMT
+< Expires: Fri, 10 Feb 2017 21:12:35 GMT
+< Content-Length: 186
+* Server Jetty(8.1.19.v20160209) is not blacklisted
+< Server: Jetty(8.1.19.v20160209)
+<
+* Connection #0 to host 10.183.181.72 left intact
+{"request":{"mbean":"org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter","attribute":"FlowCount","type":"read"},"value":10000,"timestamp":1486764755,"status":200}
+
+
+cnode3:
+=======
+
+curl -u admin:admin -X GET -H "Content-Type:application/json" http://10.183.181.73:8080/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/FlowCount -v
+
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# curl -u admin:admin -X GET -H "Content-Type:application/json" http:/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/FlowCount -v
+* Hostname was NOT found in DNS cache
+*   Trying 10.183.181.73...
+* Connected to 10.183.181.73 (10.183.181.73) port 8080 (#0)
+* Server auth using Basic with user 'admin'
+> GET /jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter/FlowCount HTTP/1.1
+> Authorization: Basic YWRtaW46YWRtaW4=
+> User-Agent: curl/7.35.0
+> Host: 10.183.181.73:8080
+> Accept: */*
+> Content-Type:application/json
+>
+< HTTP/1.1 200 OK
+< Content-Type: text/plain;charset=UTF-8
+< Cache-Control: no-cache
+< Pragma: no-cache
+< Date: Fri, 10 Feb 2017 22:13:38 GMT
+< Expires: Fri, 10 Feb 2017 21:13:38 GMT
+< Content-Length: 186
+* Server Jetty(8.1.19.v20160209) is not blacklisted
+< Server: Jetty(8.1.19.v20160209)
+<
+* Connection #0 to host 10.183.181.73 left intact
+{"request":{"mbean":"org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowCounter","attribute":"FlowCount","type":"read"},"value":10000,"timestamp":1486764818,"status":200}
+
+##############
+##############
+SuccessCount
+##############
+##############
+
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# curl -u admin:admin -X GET -H "Content Type:application/json" http://10.183.181.71:8080/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowStats/SuccessCount -v
+* Hostname was NOT found in DNS cache
+*   Trying 10.183.181.71...
+* Connected to 10.183.181.71 (10.183.181.71) port 8080 (#0)
+* Server auth using Basic with user 'admin'
+> GET /jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowStats/SuccessCount HTTP/1.1
+> Authorization: Basic YWRtaW46YWRtaW4=
+> User-Agent: curl/7.35.0
+> Host: 10.183.181.71:8080
+> Accept: */*
+> Content Type:application/json
+>
+< HTTP/1.1 200 OK
+< Content-Type: text/plain;charset=UTF-8
+< Cache-Control: no-cache
+< Pragma: no-cache
+< Date: Fri, 10 Feb 2017 22:16:20 GMT
+< Expires: Fri, 10 Feb 2017 21:16:20 GMT
+< Content-Length: 4340
+* Server Jetty(8.1.19.v20160209) is not blacklisted
+< Server: Jetty(8.1.19.v20160209)
+<
+{"request":{"mbean":"org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowStats","attribute":"SuccessCount","type":"read"},"stacktrace":"javax.management.InstanceNotFoundException: org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowStats\n\tat com.sun.jmx.interceptor.DefaultMBeanServerInterceptor.getMBean(DefaultMBeanServerInterceptor.java:1095)\n\tat com.sun.jmx.interceptor.DefaultMBeanServerInterceptor.getAttribute(DefaultMBeanServerInterceptor.java:643)\n\tat com.sun.jmx.mbeanserver.JmxMBeanServer.getAttribute(JmxMBeanServer.java:678)\n\tat org.jolokia.handler.ReadHandler.doHandleRequest(ReadHandler.java:106)\n\tat org.jolokia.handler.ReadHandler.doHandleRequest(ReadHandler.java:37)\n\tat org.jolokia.handler.JsonRequestHandler.handleRequest(JsonRequestHandler.java:89)\n\tat org.jolokia.backend.MBeanServerExecutorLocal.handleRequest(MBeanServerExecutorLocal.java:109)\n\tat org.jolokia.backend.MBeanServerHandler.dispatchRequest(MBeanServerHandler.java:159)\n\tat org.jolokia.backend.LocalRequestDispatcher.dispatchRequest(LocalRequestDispatcher.java:99)\n\tat org.jolokia.backend.BackendManager.callRequestDispatcher(BackendManager.java:413)\n\tat org.jolokia.backend.BackendManager.handleRequest(BackendManager.java:158)\n\tat org.jolokia.http.HttpRequestHandler.executeRequest(HttpRequestHandler.java:197)\n\tat org.jolokia.http.HttpRequestHandler.handleGetRequest(HttpRequestHandler.java:86)\n\tat org.jolokia.http.AgentServlet$4.handleRequest(AgentServlet.java:411)\n\tat org.jolokia.http.AgentServlet.handleSecurely(AgentServlet.java:290)\n\tat org.jolokia.http.AgentServlet.handle(AgentServlet.java:261)\n\tat org.jolokia.http.AgentServlet.doGet(AgentServlet.java:221)\n\tat javax.servlet.http.HttpServlet.service(HttpServlet.java:575)\n\tat javax.servlet.http.HttpServlet.service(HttpServlet.java:668)\n\tat org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:684)\n\tat org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:501)\n\tat org.ops4j.pax.web.service.jetty.internal.HttpServiceServletHandler.doHandle(HttpServiceServletHandler.java:69)\n\tat org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:137)\n\tat org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:557)\n\tat org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:231)\n\tat org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1086)\n\tat org.ops4j.pax.web.service.jetty.internal.HttpServiceContext.doHandle(HttpServiceContext.java:240)\n\tat org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:427)\n\tat org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:193)\n\tat org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1020)\n\tat org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135)\n\tat org.ops4j.pax.web.service.jetty.internal.JettyServerHandlerCollection.handle(JettyServerHandlerCollection.java:75)\n\tat org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116)\n\tat org.eclipse.jetty.server.Server.handle(Server.java:370)\n\tat org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:494)\n\tat org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:973)\n\tat org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:1035)\n\tat org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:641)\n\tat org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:231)\n\tat org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82)\n\tat org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:696)\n\tat org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:53)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:608)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543)\n\* Connection #0 to host 10.183.181.71 left intact
+tat java.lang.Thread.run(Thread.java:745)\n","error_type":"javax.management.InstanceNotFoundException","error":"javax.management.InstanceNotFoundException : org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowStats","status":404}root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin#
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin#
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin#
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin#
+
+
+#################
+#################
+FailureCountCount
+#################
+#################
+
+
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin#
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# curl -u admin:admin -X GET -H "Content Type:application/json" http://10.183.181.71:8080/jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowStats/FailureCount -v
+* Hostname was NOT found in DNS cache
+*   Trying 10.183.181.71...
+* Connected to 10.183.181.71 (10.183.181.71) port 8080 (#0)
+* Server auth using Basic with user 'admin'
+> GET /jolokia/read/org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowStats/FailureCount HTTP/1.1
+> Authorization: Basic YWRtaW46YWRtaW4=
+> User-Agent: curl/7.35.0
+> Host: 10.183.181.71:8080
+> Accept: */*
+> Content Type:application/json
+>
+< HTTP/1.1 200 OK
+< Content-Type: text/plain;charset=UTF-8
+< Cache-Control: no-cache
+< Pragma: no-cache
+< Date: Fri, 10 Feb 2017 22:17:17 GMT
+< Expires: Fri, 10 Feb 2017 21:17:17 GMT
+< Content-Length: 4340
+* Server Jetty(8.1.19.v20160209) is not blacklisted
+< Server: Jetty(8.1.19.v20160209)
+<
+{"request":{"mbean":"org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowStats","attribute":"FailureCount","type":"read"},"stacktrace":"javax.management.InstanceNotFoundException: org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowStats\n\tat com.sun.jmx.interceptor.DefaultMBeanServerInterceptor.getMBean(DefaultMBeanServerInterceptor.java:1095)\n\tat com.sun.jmx.interceptor.DefaultMBeanServerInterceptor.getAttribute(DefaultMBeanServerInterceptor.java:643)\n\tat com.sun.jmx.mbeanserver.JmxMBeanServer.getAttribute(JmxMBeanServer.java:678)\n\tat org.jolokia.handler.ReadHandler.doHandleRequest(ReadHandler.java:106)\n\tat org.jolokia.handler.ReadHandler.doHandleRequest(ReadHandler.java:37)\n\tat org.jolokia.handler.JsonRequestHandler.handleRequest(JsonRequestHandler.java:89)\n\tat org.jolokia.backend.MBeanServerExecutorLocal.handleRequest(MBeanServerExecutorLocal.java:109)\n\tat org.jolokia.backend.MBeanServerHandler.dispatchRequest(MBeanServerHandler.java:159)\n\tat org.jolokia.backend.LocalRequestDispatcher.dispatchRequest(LocalRequestDispatcher.java:99)\n\tat org.jolokia.backend.BackendManager.callRequestDispatcher(BackendManager.java:413)\n\tat org.jolokia.backend.BackendManager.handleRequest(BackendManager.java:158)\n\tat org.jolokia.http.HttpRequestHandler.executeRequest(HttpRequestHandler.java:197)\n\tat org.jolokia.http.HttpRequestHandler.handleGetRequest(HttpRequestHandler.java:86)\n\tat org.jolokia.http.AgentServlet$4.handleRequest(AgentServlet.java:411)\n\tat org.jolokia.http.AgentServlet.handleSecurely(AgentServlet.java:290)\n\tat org.jolokia.http.AgentServlet.handle(AgentServlet.java:261)\n\tat org.jolokia.http.AgentServlet.doGet(AgentServlet.java:221)\n\tat javax.servlet.http.HttpServlet.service(HttpServlet.java:575)\n\tat javax.servlet.http.HttpServlet.service(HttpServlet.java:668)\n\tat org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:684)\n\tat org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:501)\n\tat org.ops4j.pax.web.service.jetty.internal.HttpServiceServletHandler.doHandle(HttpServiceServletHandler.java:69)\n\tat org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:137)\n\tat org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:557)\n\tat org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:231)\n\tat org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1086)\n\tat org.ops4j.pax.web.service.jetty.internal.HttpServiceContext.doHandle(HttpServiceContext.java:240)\n\tat org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:427)\n\tat org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:193)\n\tat org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1020)\n\tat org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135)\n\tat org.ops4j.pax.web.service.jetty.internal.JettyServerHandlerCollection.handle(JettyServerHandlerCollection.java:75)\n\tat org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116)\n\tat org.eclipse.jetty.server.Server.handle(Server.java:370)\n\tat org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:494)\n\tat org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:973)\n\tat org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:1035)\n\tat org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:641)\n\tat org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:231)\n\tat org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82)\n\tat org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:696)\n\tat org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:53)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:608)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543)\n\* Connection #0 to host 10.183.181.71 left intact
+tat java.lang.Thread.run(Thread.java:745)\n","error_type":"javax.management.InstanceNotFoundException","error":"javax.management.InstanceNotFoundException : org.opendaylight.openflowplugin.applications.bulk.o.matic:type=FlowStats","status":404}root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin#
+
+
+
+########################
+########################
+Delete Flows
+########################
+########################
+
+curl -u admin:admin -X POST -H "Content-Type:application/json" -d @del_flow.json http://10.183.181.71:8080/restconf/operations/sal-bulk-flow:flow-test -v
+
+root@mininet-vm:/home/mininet/integration/test/csit/variables/openflowplugin# curl -u admin:admin -X POST -H "Content-Type:application/json" -d @del_flow.json http://10.183.181.71:8080/restconf/operations/sal-bulk-flow:flow-test -v
+* Hostname was NOT found in DNS cache
+*   Trying 10.183.181.71...
+* Connected to 10.183.181.71 (10.183.181.71) port 8080 (#0)
+* Server auth using Basic with user 'admin'
+> POST /restconf/operations/sal-bulk-flow:flow-test HTTP/1.1
+> Authorization: Basic YWRtaW46YWRtaW4=
+> User-Agent: curl/7.35.0
+> Host: 10.183.181.71:8080
+> Accept: */*
+> Content-Type:application/json
+> Content-Length: 387
+>
+* upload completely sent off: 387 out of 387 bytes
+< HTTP/1.1 200 OK
+< Set-Cookie: JSESSIONID=ffirrxtqs6ll53bszfelugop;Path=/restconf
+< Expires: Thu, 01 Jan 1970 00:00:00 GMT
+< Set-Cookie: rememberMe=deleteMe; Path=/restconf; Max-Age=0; Expires=Thu, 09-Feb-2017 22:26:49 GMT
+< Content-Type: application/yang.operation+json
+< Content-Length: 0
+* Server Jetty(8.1.19.v20160209) is not blacklisted
+< Server: Jetty(8.1.19.v20160209)
+<
+* Connection #0 to host 10.183.181.71 left intact
+
+
+
+
+${uri}='/restconf/operations/sal-bulk-flow:flow-test'
+
+{
+"input" :
+  {
+   "sal-bulk-flow:is-add" : "true",
+   "sal-bulk-flow:dpn-count" : "10",
+   "sal-bulk-flow:flows-per-dpn" : "100",
+   "sal-bulk-flow:batch-size" : "1",
+   "sal-bulk-flow:seq" : "true",
+   "sal-bulk-flow:tx-chain" : "true",
+   "sal-bulk-flow:sleep-for" : "0",
+   "sal-bulk-flow:sleep-after" : "1",
+   "sal-bulk-flow:start-table-id" : "0",
+   "sal-bulk-flow:end-table-id" : "1"
+  }
+}
+
+	{'Content-Type': 'application/yang.data+json'}
+	
+	

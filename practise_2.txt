@@ -1,0 +1,320 @@
+
+>>> list1 = [1,2,3,4,5,6,7]
+>>> print list1[2:2]
+[]
+>>> print list1[2:10]
+[3, 4, 5, 6, 7]
+>>> print list1[10:]
+[]
+>>> print list1[10:2:2]
+[]
+>>> print list1[:]
+[1, 2, 3, 4, 5, 6, 7]
+>>> print list1[2:4]
+[3, 4]
+>>> print list1[4:6]
+[5, 6]
+>>> [lambda i: i*2 for i in range(4)]
+[<function <lambda> at 0x7fb4b6013578>, <function <lambda> at 0x7fb4b4127398>, <function <lambda> at 0x7fb4b4127f50>, <function <lambda> at 0x7f
+b4b4127140>]
+>>> a = [lambda i: i*2 for i in range(4)]
+>>> print a 
+[<function <lambda> at 0x7fb4b41275f0>, <function <lambda> at 0x7fb4b4127ed8>, <function <lambda> at 0x7fb4b4127848>, <function <lambda> at 0x7f
+b4b41277d0>]
+>>> a = "nokia"
+>>> print a 
+nokia
+>>> for i in range(len(a),0,-1):
+...     print i
+...
+5
+4
+3
+2
+1
+>>> for i in range(len(a),0,-1):
+...     b = ""
+...     b.append(i)
+...     print b
+...
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+AttributeError: 'str' object has no attribute 'append'
+>>> for i in range(len(a),0,-1):
+...     b = []
+...     b.append(i)
+...     print b
+...
+[5]
+[4]
+[3]
+[2]
+[1]
+>>>
+>>> list = []
+>>> print list
+[]
+>>> list.extend(1,2,3)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: extend() takes exactly one argument (3 given)
+>>> list.extend([1,2,3])
+>>> print list
+[1, 2, 3]   
+>>> list.extend([4,5,6])
+>>> print list
+[1, 2, 3, 4, 5, 6]
+>>> list.append(1,2,3)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: append() takes exactly one argument (3 given)
+>>> list.append([1,2,3])
+>>> print list
+[1, 2, 3, 4, 5, 6, [1, 2, 3]]
+>>> list.extend([])
+>>> print list
+[1, 2, 3, 4, 5, 6, [1, 2, 3]]
+>>> list.extend([])
+>>> list.extend([])
+>>> print list
+[1, 2, 3, 4, 5, 6, [1, 2, 3]]
+>>> list.append([])
+>>> print list
+[1, 2, 3, 4, 5, 6, [1, 2, 3], []]
+>>> list.append([])
+>>> list.append([])
+>>> list.append([])
+>>> print list
+[1, 2, 3, 4, 5, 6, [1, 2, 3], [], [], [], []]
+>>> list.insert(7, 8)
+>>> list.insert(8, 9)
+>>> print list
+[1, 2, 3, 4, 5, 6, [1, 2, 3], 8, 9, [], [], [], []]
+>>> list.remove(8, 9)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: remove() takes exactly one argument (2 given)
+>>> list.remove(8)
+>>> print list
+[1, 2, 3, 4, 5, 6, [1, 2, 3], 9, [], [], [], []]
+>>> list.remove(6)
+>>> print list
+[1, 2, 3, 4, 5, [1, 2, 3], 9, [], [], [], []]
+>>> list.remove(6)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: list.remove(x): x not in list
+>>> list.remove(6(0))
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'int' object is not callable
+>>> list.insert(9, 8)
+>>> print list
+[1, 2, 3, 4, 5, [1, 2, 3], 9, [], [], 8, [], []]
+>>> list.insert(8, 9)
+>>> print list
+[1, 2, 3, 4, 5, [1, 2, 3], 9, [], 9, [], 8, [], []]
+>>> print list[5][2]
+3
+>>> print list[7]
+[]
+>>> print list[9]
+[]
+>>> print list[11]
+[]
+>>> print list[12]
+[]
+>>> print list.append(11, 1)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: append() takes exactly one argument (2 given)
+>>> print list.append([11, 1])
+None
+>>> print list
+[1, 2, 3, 4, 5, [1, 2, 3], 9, [], 9, [], 8, [], [], [11, 1]]
+>>> len(list)
+14
+>>> list[::-1}
+  File "<stdin>", line 1
+    list[::-1}
+             ^
+SyntaxError: invalid syntax
+>>> list[::-1]
+[[11, 1], [], [], 8, [], 9, [], 9, [1, 2, 3], 5, 4, 3, 2, 1]
+>>> list.pop()
+[11, 1]
+>>> list.pop()
+[]
+>>> list.pop()
+[]
+>>> list.pop()
+8
+>>> list.pop()
+[]
+>>> list.pop()
+9
+>>> list.pop()
+[]
+>>> list.pop()
+9
+>>> list.pop()
+[1, 2, 3]   
+>>> list.push(1)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'list' object has no attribute 'push'
+>>> print list
+[1, 2, 3, 4, 5]
+>>> list.push(1,2)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'list' object has no attribute 'push'
+>>> list.pop(3)
+4
+>>> print list
+[1, 2, 3, 5]
+>>> list.insert(3,4)
+>>> print list
+[1, 2, 3, 4, 5]
+>>> list.insert(0,0)
+>>> print list
+[0, 1, 2, 3, 4, 5]
+>>> print list[0:0]
+[]
+
+>>> print list[:]
+[0, 1, 2, 3, 4, 5]
+>>> print list[2:6]
+[2, 3, 4, 5]
+>>> print list[2:10]
+[2, 3, 4, 5]
+>>> print list[10:]
+[]
+>>> print list[10:]
+[]
+>>> print list[3:]
+[3, 4, 5]   
+>>> print list[4:]
+[4, 5]
+>>> print list[5:]
+[5]
+>>> print list[6:]
+[]
+>>>
+>>>
+>>> print list[6:]
+[]
+>>> print list[6:]
+[]
+>>> print list[7:]
+[]
+>>> print list[7:]
+[]
+>>> print list[7:]
+[]
+>>> print list[6:]
+[]
+>>> print list[3:]
+[3, 4, 5]   
+>>> import subprocess
+>>> d_o1 = commands.getoutput('ls -lrt')
+>>> print d_o1
+total 17908 
+-rw-rw-r-- 1 spanidea spanidea 5887888 Apr 23 12:23 re
+-rw-rw-r-- 1 spanidea spanidea 5887888 Apr 23 13:06 re_org
+-rw-rw-r-- 1 spanidea spanidea 5887888 Apr 23 13:14 re_org.txt
+-rwxrwxr-x 1 spanidea spanidea    1131 Apr 23 14:38 python1.py
+-rwxrwxr-x 1 spanidea spanidea    1131 Apr 24 09:52 python1_bkp.py
+-rwxr-xr-x 1 root     root        7578 Apr 24 13:52 robotframework-requests-0.4.7.tar.gz
+drwxrwxr-x 5 spanidea spanidea    4096 Apr 24 13:52 robotframework-requests-0.4.7
+-rwxr-xr-x 1 root     root          70 Apr 24 14:45 ip_addresses.txt
+-rwxrwxr-x 1 spanidea spanidea      65 Apr 24 15:20 simple1.py
+-rwxrwxr-x 1 spanidea spanidea    1263 Apr 24 15:21 pexpect1.py
+
+>>> d_o = subprocess.check_output('ls -lrt' , shell=True)
+>>> print d_o
+total 17908 
+-rw-rw-r-- 1 spanidea spanidea 5887888 Apr 23 12:23 re
+-rw-rw-r-- 1 spanidea spanidea 5887888 Apr 23 13:06 re_org
+-rw-rw-r-- 1 spanidea spanidea 5887888 Apr 23 13:14 re_org.txt
+-rwxrwxr-x 1 spanidea spanidea    1131 Apr 23 14:38 python1.py
+-rwxrwxr-x 1 spanidea spanidea    1131 Apr 24 09:52 python1_bkp.py
+-rwxr-xr-x 1 root     root        7578 Apr 24 13:52 robotframework-requests-0.4.7.tar.gz
+drwxrwxr-x 5 spanidea spanidea    4096 Apr 24 13:52 robotframework-requests-0.4.7
+-rwxr-xr-x 1 root     root          70 Apr 24 14:45 ip_addresses.txt
+-rwxrwxr-x 1 spanidea spanidea      65 Apr 24 15:20 simple1.py
+-rwxrwxr-x 1 spanidea spanidea    1263 Apr 24 15:21 pexpect1.py
+
+>>> list1 = [1,2,3,4,5]
+>>> list2 = [6,7,8,9,10]
+>>> zip(list1,list2)
+[(1, 6), (2, 7), (3, 8), (4, 9), (5, 10)]
+>>> list3 = zip(list1,list2)
+>>> zip(list1,list2)
+[(1, 6), (2, 7), (3, 8), (4, 9), (5, 10)]
+>>> list3 = zip(list1,list2)
+>>> print list3[1]
+(2, 7)
+>>> list4 = dict(zip(list1,list2))
+>>> print list4
+{1: 6, 2: 7, 3: 8, 4: 9, 5: 10}
+>>> d = {k: None for k in list1}
+>>> print d
+{1: None, 2: None, 3: None, 4: None, 5: None}
+>>> d = {k: v for k in list1 for v in list2}
+>>> print d
+{1: 10, 2: 10, 3: 10, 4: 10, 5: 10}
+>>> import itertools
+>>> d1 = (itertools.izip(list1,list2))
+>>> print d1
+<itertools.izip object at 0x7fb4b41201b8>
+>>> keys = (name,age,rank)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'name' is not defined
+>>> keys = ('name','age','rank')
+>>> values = ('naveen','12','5')
+>>> print keys
+('name', 'age', 'rank')
+>>> print type(keys)
+<type 'tuple'>
+>>> d12 = itertools.izip(keys,values)
+>>> print d12
+<itertools.izip object at 0x7fb4b42d8ef0>
+>>> d12 = dict(itertools.izip(keys,values))
+>>> print d12
+{'age': '12', 'name': 'naveen', 'rank': '5'}
+>>> d1 = dict(itertools.izip(list1,list2))
+>>> print d1
+{1: 6, 2: 7, 3: 8, 4: 9, 5: 10}
+>>> print d1
+>>> numbers = [1, 5, 10, 8];
+>>> new_numbers = [];
+>>> for n in numbers:
+...     new_numbers.append(int(n));
+... numbers = new_numbers;
+  File "<stdin>", line 3
+    numbers = new_numbers;
+          ^
+SyntaxError: invalid syntax
+>>> numbers = [ int(x) for x in numbers ]
+>>> print numbers
+[1, 5, 10, 8]
+>>> numbers = [1, 5, 10, 8,'atr','djdb','dwbd',2,3,4,7,6];
+>>> print numbers
+[1, 5, 10, 8, 'atr', 'djdb', 'dwbd', 2, 3, 4, 7, 6]
+>>> numbers = [ int(x) for x in numbers ]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: invalid literal for int() with base 10: 'atr'
+>>> numbers = [ x for x in numbers if isinstance(x,int)]
+>>> print numbers
+[1, 5, 10, 8, 2, 3, 4, 7, 6]
+>>> numbers = [ x for x in numbers if isinstance(x,str)]
+>>> print numbers
+[]
+>>> numbers = [1, 5, 10, 8,'atr','djdb','dwbd',2,3,4,7,6];
+>>> numbers = [ x for x in numbers if isinstance(x,str)]
+>>> print numbers
+['atr', 'djdb', 'dwbd']
+>>>

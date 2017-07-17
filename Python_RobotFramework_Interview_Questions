@@ -1,0 +1,23 @@
+python interview questions:
+===========================
+
+1.write a program to get content from file and check each element whether it is char or integer, if it is integer then print those many febonacci series.
+2. benefit of importing particular  method from module in place of importing entire module.
+3. how you debug your code ?
+
+
+1. Difference between list and tuple.
+2. Reverse a list.
+3. Write a script for counting letters from a given string. And write the corresponding validations.
+4. File operation. Difference between read and readline.
+4. Difference between range and xrange
+5. How to check for a file existence.
+6. How to write your own module and import it from a script.
+7. What is pyc file.
+8. How to debug using pdb
+9. Explain how to use exception in python
+10. How to define class and how to initialise members within class.
+11. Where to use pass and continue in python
+12. Project related questions
+13. How confident in writing python script from scratch.
+
